@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load steam_filters %}
+{% load humanize %}
+
+{% block content %}
+
+<table>
+    <tr>
+        <th>title</th>
+        <th>content</th>
+        <th>author</th>
+        <th>date</th>
+    </tr>
+{% for new in news %}
+    <tr>
+        <td>{{ new.title }}</td>
+        <td>{{ new.contents }}</td>
+        <td>{{ new.author }}</td>
+        <td>{{ new.date|convert_timestamp }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}
