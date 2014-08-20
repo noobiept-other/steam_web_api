@@ -40,3 +40,27 @@ def app_list( request ):
     utilities.get_message( request, context )
 
     return render( request, 'app_list.html', context )
+
+
+def global_achievement_percentages( request, appId ):
+
+    context = {
+        'achievements': steam_api.getGlobalAchievementPercentagesForApp( appId )
+    }
+
+    utilities.get_message( request, context )
+
+    return render( request, 'global_achievement_percentages.html', context )
+
+
+def steam_profile( request, steamId ):
+
+    #steamId = 76561198041365537 #test
+
+    context = {
+        'profile': steam_api.getPlayerSummaries( [ steamId ] )[ 0 ]
+    }
+
+    utilities.get_message( request, context )
+
+    return render( request, 'steam_profile.html', context )

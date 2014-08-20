@@ -50,27 +50,27 @@ def getAppList():
 
     return r.json()[ 'applist' ][ 'apps' ][ 'app' ]
 
-#HERE need to test below this
 
 
 def getGlobalAchievementPercentagesForApp( appId ):
+    """
+    :param appId:
+    :return:
+        [
+            {
+                "name"   : str,
+                "percent : int
+            }
+        ]
+    """
 
     url = 'http://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={}&format=json'.format( appId )
 
     r = requests.get( url )
 
-    return r.json()
+    return r.json()[ 'achievementpercentages' ][ 'achievements' ]
 
 
-def getGlobalStatsForGame( appId, achievementsNames ):
-
-    count = len( achievementsNames )
-        #HERE name[0], name[1], etc
-    url = 'http://api.steampowered.com/ISteamUserStats/GetGlobalStatsForGame/v0001/?format=json&appid={}&count={}&name[0]={}'.format( appId, count, achievementsNames[ 0 ] )
-
-    r = requests.get( url )
-
-    return r.json()
 
 
 def getPlayerSummaries( steamIds ):
@@ -78,17 +78,38 @@ def getPlayerSummaries( steamIds ):
 
     :param steamIds: list of 64-bit steam IDs
     :return:
+        [
+            {
+                "steamid": str (of an int),
+                "communityvisibilitystate": int,
+                "profilestate": int,
+                "personaname": str,
+                "lastlogoff": int (unix timestamp),
+                "commentpermission": int,
+                "profileurl": str (url),
+                "avatar": str (url),
+                "avatarmedium": str (url),
+                "avatarfull": str (url),
+                "personastate": int,
+                "primaryclanid": int,
+                "timecreated": int ,
+                "personastateflags": int
+            },
+            (...)
+        ]
     """
 
-    idsStr = ','.join( steamIds )
+    idsStr = ','.join( str( a ) for a in steamIds )
     steamKey = settings.STEAM_API_KEY
 
     url = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}&format=json'.format( steamKey, idsStr )
 
     r = requests.get( url )
 
-    return r.json()
+    return r.json()[ 'response' ][ 'players' ]
 
+
+#HERE need to test below this
 
 def getFriendList( steamId, relationship= 'friend' ):
     """
@@ -105,6 +126,7 @@ def getFriendList( steamId, relationship= 'friend' ):
     return r.json()
 
 #HERE optional language parameter
+#l=english
 def getPlayerAchievements( steamId, appId ):
 
     url = 'http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid={}&key={}&steamid={}&format=json'.format( appId, settings.STEAM_API_KEY, steamId )

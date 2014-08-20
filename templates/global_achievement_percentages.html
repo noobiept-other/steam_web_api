@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table>
+    <tr>
+        <th>name</th>
+        <th>percent</th>
+    </tr>
+    {% for achievement in achievements %}
+    <tr>
+        <td>{{ achievement.name }}</td>
+        <td>{{ achievement.percent|floatformat:"2" }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

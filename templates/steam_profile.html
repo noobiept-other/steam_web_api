@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load steam_filters %}
+
+{% block content %}
+
+<ul>
+    <li>Name: {{ profile.personaname }}</li>
+    <li>Avatar: <img src="{{ profile.avatar }}" /></li>
+    <li>Created: {{ profile.timecreated|convert_timestamp }}</li>
+    <li>Last log off: {{ profile.lastlogoff|convert_timestamp }}</li>
+</ul>
+
+{% endblock %}
