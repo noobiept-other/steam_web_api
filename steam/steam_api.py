@@ -109,7 +109,6 @@ def getPlayerSummaries( steamIds ):
     return r.json()[ 'response' ][ 'players' ]
 
 
-#HERE need to test below this
 
 def getFriendList( steamId, relationship= 'friend' ):
     """
@@ -117,34 +116,86 @@ def getFriendList( steamId, relationship= 'friend' ):
     :param steamId:
     :param relationship: 'all' or 'friend'
     :return:
+        [
+            {
+                "steamid": int,
+                "relationship": str,
+                "friend_since": int (unix timestamp)
+            },
+            (...)
+        ]
     """
 
     url = 'http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key={}&steamid={}&relationship={}&format=json'.format( settings.STEAM_API_KEY, steamId, relationship )
 
     r = requests.get( url )
 
-    return r.json()
+    return r.json()[ 'friendslist' ][ 'friends' ]
 
-#HERE optional language parameter
-#l=english
-def getPlayerAchievements( steamId, appId ):
 
-    url = 'http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid={}&key={}&steamid={}&format=json'.format( appId, settings.STEAM_API_KEY, steamId )
+def getPlayerAchievements( steamId, appId, language= 'english' ):
+    """
+    :param steamId:
+    :param appId:
+    :param language:
+    :return:
+        {
+            "steamID": str (of a number),
+            "gameName": str,
+            "achievements":
+                [
+                    {
+                        "apiname": str,
+                        "achieved": int (0 or 1)
+                    },
+                    (...)
+                ],
+            "success": bool
+        }
+    """
+
+    url = 'http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid={}&key={}&steamid={}&format=json&l={}'.format( appId, settings.STEAM_API_KEY, steamId, language )
 
     r = requests.get( url )
 
-    return r.json()
+    return r.json()[ 'playerstats' ]
 
-#HERE optional language parameter
-def getUserStatsForGame( steamId, appId ):
 
-    url = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={}&key={}&steamid={}&format=json'.format( appId, settings.STEAM_API_KEY, steamId )
+def getUserStatsForGame( steamId, appId, language= 'english' ):
+    """
+    :param steamId:
+    :param appId:
+    :param language:
+    :return:
+        {
+            "steamID": str (of a number),
+            "gameName": str,
+            "stats":
+                [
+                    {
+                        "name": str,
+                        "value": int
+                    },
+                    (...)
+                ],
+            "achievements":
+                [
+                    {
+                        "name": str,
+                        "achieved": int (0 or 1)
+                    },
+                    (...)
+                ]
+        }
+    """
+
+    url = 'http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={}&key={}&steamid={}&format=json&l={}'.format( appId, settings.STEAM_API_KEY, steamId, language )
 
     r = requests.get( url )
 
-    return r.json()
+    return r.json()[ 'playerstats' ]
 
-
+#HERE need to test below this
 def getOwnedGames( steamId ):
     #HERE some extra arguments
     url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json'.format( settings.STEAM_API_KEY, steamId )

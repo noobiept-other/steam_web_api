@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ stats.gameName }}</h1>
+
+<h2>Statistics</h2>
+
+{% if stats.stats %}
+    <table>
+        <tr>
+            <th>name</th>
+            <th>value</th>
+        </tr>
+        {% for stat in stats.stats %}
+        <tr>
+            <td>{{ stat.name }}</td>
+            <td>{{ stat.value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No stats yet.</p>
+{% endif %}
+
+<h2>Achievements</h2>
+
+{% if stats.achievements %}
+    <ul>
+        {% for achievement in stats.achievements %}
+            {% if achievement.achieved != 0 %}
+                <li>{{ achievement.name }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+{% else %}
+    <p>No achievements yet.</p>
+{% endif %}
+
+{% endblock %}

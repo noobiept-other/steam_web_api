@@ -56,11 +56,31 @@ def global_achievement_percentages( request, appId ):
 def steam_profile( request, steamId ):
 
     #steamId = 76561198041365537 #test
+    profile = steam_api.getPlayerSummaries( [ steamId ] )[ 0 ]
+
+    friendsList = steam_api.getFriendList( steamId )
+
+    friendsId = [ a[ 'steamid' ] for a in friendsList ]
+
+        # get the names of the friends
+    friendsProfiles = steam_api.getPlayerSummaries( friendsId )
 
     context = {
-        'profile': steam_api.getPlayerSummaries( [ steamId ] )[ 0 ]
+        'profile': profile,
+        'friendsProfile': friendsProfiles
     }
 
     utilities.get_message( request, context )
 
     return render( request, 'steam_profile.html', context )
+
+
+def game_stats( request, steamId, appId ):
+
+    stats = steam_api.getUserStatsForGame( steamId, appId )
+
+    context = {
+        'stats': stats
+    }
+
+    return render( request, 'game_stats.html', context )

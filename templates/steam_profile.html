@@ -10,4 +10,14 @@
     <li>Last log off: {{ profile.lastlogoff|convert_timestamp }}</li>
 </ul>
 
+
+<h2>Friends</h2>
+
+<ul>
+{% for friend in friendsProfile %}
+    <li>{{ friend.personaname }}</li>
+{% endfor %}
+</ul>
+
+
 {% endblock %}
