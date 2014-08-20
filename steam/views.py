@@ -22,13 +22,21 @@ def show_news( request ):
     aomId = 266840
     howMany = 3
 
-    stuff = steam_api.getAppNews( aomId, howMany )
-    news = stuff[ 'appnews' ][ 'newsitems' ]
-
     context = {
-        'news': news
+        'news': steam_api.getNewsForApp( aomId, howMany )
     }
 
     utilities.get_message( request, context )
 
     return render( request, 'news.html', context )
+
+
+def app_list( request ):
+
+    context = {
+        'apps': steam_api.getAppList()
+    }
+
+    utilities.get_message( request, context )
+
+    return render( request, 'app_list.html', context )

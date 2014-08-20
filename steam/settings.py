@@ -183,3 +183,8 @@ LOGGING = {
         },
     }
 }
+
+
+with open( os.path.join( SETTINGS_DIR, 'steam_api_key.txt' ), 'r', encoding= 'utf-8' ) as f:
+    STEAM_API_KEY = f.read()
+

@@ -7,6 +7,7 @@ urlpatterns = patterns('',
 
     url( r'^$', 'steam.views.home', name= 'home' ),
     url( r'^news$', 'steam.views.show_news', name= 'news' ),
+    url( r'^app_list$', 'steam.views.app_list', name= 'app_list' ),
 
 
     # Uncomment the admin/doc line below to enable admin documentation:

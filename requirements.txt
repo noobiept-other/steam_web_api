@@ -1,2 +1,4 @@
-- python 3.4
-- django 1.6
+# python 3.4
+
+django >= 1.6, <= 1.7
+requests == 2.3
