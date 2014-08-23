@@ -226,30 +226,78 @@ def getOwnedGames( steamId, filterApps= None ):
 
     info = r.json()[ 'response' ]
 
-        # update the images url
-    for game in info[ 'games' ]:
-        appId = game[ 'appid' ]
-
-        game[ 'img_icon_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, game[ 'img_icon_url' ] )
-        game[ 'img_logo_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, game[ 'img_logo_url' ] )
+    _update_image_urls( info[ 'games' ] )
 
     return info
 
 
-#HERE need to test below this
-def getRecentlyPlayedGames( steamId, count ):   #HERE count optional
+
+def getRecentlyPlayedGames( steamId, count= None ):
+    """
+    :param steamId:
+    :param count:
+    :return:
+        {
+            "total_count": int,
+            "games":
+                [
+                    {
+                        "appid": int,
+                        "name": str,
+                        "playtime_2weeks": int,     # total of minutes played last 2 weeks
+                        "playtime_forever": int,    # total of minutes played on record
+                        "img_icon_url": str,
+                        "img_logo_url": str
+                    },
+                    (...)
+                ]
+        }
+    """
 
     url = 'http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key={}&steamid={}&format=json'.format( settings.STEAM_API_KEY, steamId )
 
+    if count is not None:
+        url = '{}&count={}'.format( url, count )
+
     r = requests.get( url )
 
-    return r.json()
+    info = r.json()[ 'response' ]
+
+    _update_image_urls( info[ 'games' ] )
+
+    return info
 
 
 def isPlayingSharedGame( steamId, appId ):
-
+    """
+    :param steamId:
+    :param appId:
+    :return:
+        {
+            "lender_steamid": str (an id)
+        }
+        
+        The id of the lender of the game, or 0 if the game is owned by the account.
+    """
     url = 'http://api.steampowered.com/IPlayerService/IsPlayingSharedGame/v0001/?key={}&steamid={}&appid_playing={}&format=json'.format( settings.STEAM_API_KEY, steamId, appId )
 
     r = requests.get( url )
 
-    return r.json()
+    return r.json()[ 'response' ]
+
+
+
+def _update_image_urls( theList ):
+    """
+        Some methods of the steam api return a 'img_icon_url' and 'img_logo_url' with just the image's name, not the full url, so this function updates the dictionaries in the list with the full url
+
+    :param theList:
+    :return:
+    """
+
+    for app in theList:
+        appId = app[ 'appid' ]
+
+        app[ 'img_icon_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, app[ 'img_icon_url' ] )
+        app[ 'img_logo_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, app[ 'img_logo_url' ] )
+
