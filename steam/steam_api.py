@@ -195,17 +195,48 @@ def getUserStatsForGame( steamId, appId, language= 'english' ):
 
     return r.json()[ 'playerstats' ]
 
-#HERE need to test below this
-def getOwnedGames( steamId ):
-    #HERE some extra arguments
-    url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json'.format( settings.STEAM_API_KEY, steamId )
+
+def getOwnedGames( steamId, filterApps= None ):
+    """
+    :param steamId:
+    :return:
+        {
+            "game_count": int,
+            "games":
+                [
+                    {
+                        "appid": int,
+                        "name": str,
+                        "playtime_forever": int,    # number of minutes played on record
+                        "img_icon_url": str,
+                        "img_logo_url": str,
+                        "has_community_visible_stats": bool     # if there's a stats page with achievements or other game stats for this game
+                    },
+                    (...)
+                ]
+        }
+    """
+
+    url = 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json&include_appinfo=1&include_played_free_games=1'.format( settings.STEAM_API_KEY, steamId )
+
+    if filterApps is not None:
+        url = '{}&input_json={{"appids_filter":{}}}'.format( url, str( filterApps ) )
 
     r = requests.get( url )
 
-    return r.json()
+    info = r.json()[ 'response' ]
+
+        # update the images url
+    for game in info[ 'games' ]:
+        appId = game[ 'appid' ]
+
+        game[ 'img_icon_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, game[ 'img_icon_url' ] )
+        game[ 'img_logo_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, game[ 'img_logo_url' ] )
+
+    return info
 
 
-
+#HERE need to test below this
 def getRecentlyPlayedGames( steamId, count ):   #HERE count optional
 
     url = 'http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key={}&steamid={}&format=json'.format( settings.STEAM_API_KEY, steamId )

@@ -67,6 +67,7 @@ def steam_profile( request, steamId ):
 
     context = {
         'profile': profile,
+        'steamId': steamId,
         'friendsProfile': friendsProfiles
     }
 
@@ -84,3 +85,14 @@ def game_stats( request, steamId, appId ):
     }
 
     return render( request, 'game_stats.html', context )
+
+
+def games_owned( request, steamId ):
+
+    games = steam_api.getOwnedGames( steamId )
+
+    context = {
+        'games': games
+    }
+
+    return render( request, 'games_owned.html', context )

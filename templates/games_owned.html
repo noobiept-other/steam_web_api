@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Game count: {{ games.game_count }}</h1>
+
+{% if games.games %}
+
+<table>
+    <tr>
+        <th>name</th>
+        <th>playtime</th>
+        <th>icon</th>
+    </tr>
+    {% for game in games.games %}
+    <tr>
+        <td>{{ game.name }}</td>
+        <td>{{ game.playtime_forever }}m</td>
+        <td><img src="{{ game.img_icon_url }}" /></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+    <p>No games owned.</p>
+{% endif %}
+{% endblock %}

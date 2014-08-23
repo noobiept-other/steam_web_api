@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url( r'^global_achievement_percentages/(?P<appId>\d+)$', 'steam.views.global_achievement_percentages', name= 'global_achievement_percentages' ),
     url( r'^steam_profile/(?P<steamId>\d+)$', 'steam.views.steam_profile', name= 'steam_profile' ),
     url( r'game_stats/(?P<steamId>\d+)/(?P<appId>\d+)$', 'steam.views.game_stats', name= 'game_stats' ),
+    url( r'^games_owned/(?P<steamId>\d+)$', 'steam.views.games_owned', name= 'games_owned' ),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
