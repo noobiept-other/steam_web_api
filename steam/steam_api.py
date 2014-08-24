@@ -7,7 +7,7 @@ def getNewsForApp( appId, howMany, maxLength= 300 ):
     """
     :param appId:
     :param howMany:
-    :param maxLength:
+    :param maxLength: 0 to return the full content,  otherwise it limits the length of the content returned.
     :return:
         [
             {
@@ -276,7 +276,7 @@ def isPlayingSharedGame( steamId, appId ):
         {
             "lender_steamid": str (an id)
         }
-        
+
         The id of the lender of the game, or 0 if the game is owned by the account.
     """
     url = 'http://api.steampowered.com/IPlayerService/IsPlayingSharedGame/v0001/?key={}&steamid={}&appid_playing={}&format=json'.format( settings.STEAM_API_KEY, steamId, appId )
@@ -284,6 +284,67 @@ def isPlayingSharedGame( steamId, appId ):
     r = requests.get( url )
 
     return r.json()[ 'response' ]
+
+
+def getNumberOfCurrentPlayers( appId ):
+    """
+    :param appId: int
+    :return: int
+    """
+
+    url = 'http://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid={}'.format( appId )
+
+    r = requests.get( url )
+
+    return r.json()[ 'response' ][ 'player_count' ]
+
+
+def getSteamLevel( steamId ):
+    """
+    :param steamId: int
+    :return: int
+    """
+
+    url = 'http://api.steampowered.com/IPlayerService/GetSteamLevel/v1?key={}&steamid={}'.format( settings.STEAM_API_KEY, steamId )
+
+    r = requests.get( url )
+
+    return r.json()[ 'response' ][ 'player_level' ]
+
+
+
+def getBadges( steamId ):
+    """
+    :param steamId: int
+    :return:
+        {
+            "player_xp": int,
+            "player_level": 13,
+            "player_xp_needed_to_level_up": int,
+            "player_xp_needed_current_level": int,
+            "badges":
+                [
+                    {
+                        "badgeid": int,
+                        "level": int,
+                        "completion_time": int,
+                        "xp": int,
+                        "scarcity": int,
+                        "communityitemid": str (of an int),     # optional
+				        "border_color": int,        # optional
+				        "scarcity": int             # optional
+                    },
+                    (...)
+                ]
+        }
+    """
+
+    url = 'http://api.steampowered.com/IPlayerService/GetBadges/v1?key={}&steamid={}'.format( settings.STEAM_API_KEY, steamId )
+
+    r = requests.get( url )
+
+    return r.json()[ 'response' ]
+
 
 
 
