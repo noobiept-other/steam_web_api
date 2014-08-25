@@ -134,8 +134,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.humanize',
-    # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+
+    'social.apps.django_app.default',
 
     'accounts',
     'steam',
@@ -150,6 +151,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     'django.core.context_processors.request',
+
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
 )
 
 
@@ -188,3 +192,27 @@ LOGGING = {
 with open( os.path.join( SETTINGS_DIR, 'steam_api_key.txt' ), 'r', encoding= 'utf-8' ) as f:
     STEAM_API_KEY = f.read()
 
+
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.steam.SteamOpenId',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [ 'username', 'first_name', 'email' ]
+SOCIAL_AUTH_STEAM_API_KEY = STEAM_API_KEY
+SOCIAL_AUTH_STEAM_EXTRA_DATA = [ 'player' ]
+SOCIAL_AUTH_USER_MODEL = 'accounts.Account'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'accounts.auth_pipeline.update_profile',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details',
+)

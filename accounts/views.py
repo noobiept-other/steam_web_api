@@ -42,7 +42,8 @@ def user_page( request, username ):
         raise Http404( "User doesn't exist." )
 
     context = {
-        'pageUser': user
+        'pageUser': user,
+        'steamInfo': user.get_steam_extra_data()
     }
 
     utilities.get_message( request, context )
