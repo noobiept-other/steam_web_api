@@ -15,10 +15,10 @@
     <a href="{% url 'home' %}">Home</a>
 
     {% if user.is_authenticated %}
-        <a href="{% url 'accounts:user_page' user.username %}">{{ user.username }}</a>
+        <a href="{% url 'accounts:user_page' user.steam_id %}">{{ user.username }}</a>
         <a href="{% url 'accounts:logout' %}?next={{ request.get_full_path|urlencode }}">logout</a>
     {% else %}
-        <a href="{% url 'social:begin' 'steam' %}?next={{ request.get_full_path|urlencode }}">login</a>
+        <a href="{% url 'social:begin' 'steam' %}?next={{ request.get_full_path|urlencode }}"><img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_large_border.png" alt="login" title="login" /></a>
     {% endif %}
 
     <a href="{% url 'news' %}">News</a>
@@ -30,6 +30,8 @@
 {% endif %}
 
 {% block content %}{% endblock %}
+
+<footer><a href="http://steampowered.com" target="_blank">Powered by Steam</a></footer>
 
 </body>
 </html>

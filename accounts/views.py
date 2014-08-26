@@ -31,12 +31,12 @@ def new_account( request ):
     return render( request, 'accounts/new_account.html', context )
 
 
-def user_page( request, username ):
+def user_page( request, steamId, whatToShow= None ):
 
     userModel = get_user_model()
 
     try:
-        user = userModel.objects.get( username= username )
+        user = userModel.objects.get( steam_id= steamId )
 
     except userModel.DoesNotExist:
         raise Http404( "User doesn't exist." )
@@ -45,6 +45,15 @@ def user_page( request, username ):
         'pageUser': user,
         'steamInfo': user.get_steam_extra_data()
     }
+
+    if whatToShow == 'friends':
+        context [ 'friends' ] = user.get_friends()
+
+    elif whatToShow == 'games_owned':
+        context[ 'games_owned' ] = user.get_games_owned()
+
+    else:
+        context[ 'games_played' ] = user.get_games_played()
 
     utilities.get_message( request, context )
 

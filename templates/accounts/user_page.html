@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load steam_filters %}
 
 {% block content %}
 
+    <p><img src="{{ steamInfo.avatarfull }}" /></p>
     <h2>
-        {{ pageUser.username }}
+    <img src="{{ steamInfo.avatar }}" /> name: <a href="{{ steamInfo.profileurl }}">{{ steamInfo.personaname }}</a>
 
         <ul class="horizontalList">
             {% if user.is_staff %}
@@ -21,7 +23,8 @@
         </ul>
     </h2>
 
-    <p>User since: {{ pageUser.date_joined }} ({{ pageUser.date_joined|naturaltime }})</p>
+    <p>Joined: {{ pageUser.date_joined }} ({{ pageUser.date_joined|naturaltime }})</p>
+    <p>Last log off: {{ steamInfo.lastlogoff|convert_timestamp }}</p>
 
     {% if user.is_authenticated %}
         <ul>
@@ -35,11 +38,71 @@
     {% endif %}
 
 
-<!-- steam part -->
-<div>
-    <p>name: <a href="{{ steamInfo.profileurl }}">{{ steamInfo.personaname }}</a></p>
-    <p><img src="{{ steamInfo.avatarfull }}" /></p>
-</div>
+    <ul class="horizontalList">
+        <li {% if games_played %}class="entrySelected" {% endif %}>
+            <a href="{% url 'accounts:user_page' pageUser.steam_id %}">games played recently</a>
+        </li>
+        <li {% if friends %}class="entrySelected" {% endif %}>
+            <a href="{% url 'accounts:user_page_specify' pageUser.steam_id 'friends' %}">friends</a>
+        </li>
+        <li {% if games_owned %}class="entrySelected" {% endif %}>
+            <a href="{% url 'accounts:user_page_specify' pageUser.steam_id 'games_owned' %}">games owned</a>
+        </li>
+    </ul>
+
+    {% if friends %}
+    <table>
+        <tr>
+            <th>Name</th>
+        </tr>
+        {% for friend in friends %}
+        <tr>
+            <td>{{ friend.personaname }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if games_played %}
+    <table>
+        <tr>
+            <th>icon</th>
+            <th>name</th>
+            <th>playtime last 2 weeks</th>
+            <th>playtime on record</th>
+            <th>logo</th>
+        </tr>
+        {% for game in games_played.games %}
+        <tr>
+            <td><img src="{{ game.img_icon_url }}" /></td>
+            <td>{{ game.name }}</td>
+            <td>{{ game.playtime_2weeks }}m</td>
+            <td>{{ game.playtime_forever }}m</td>
+            <td><img src="{{ game.img_logo_url }}" /></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if games_owned %}
+    <p>Game count: {{ games_owned.game_count }}</p>
+
+    <table>
+        <tr>
+            <th>name</th>
+            <th>playtime</th>
+            <th>icon</th>
+        </tr>
+        {% for game in games_owned.games %}
+        <tr>
+            <td>{{ game.name }}</td>
+            <td>{{ game.playtime_forever }}m</td>
+            <td><img src="{{ game.img_icon_url }}" /></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endif %}
 
 
 {% endblock %}
