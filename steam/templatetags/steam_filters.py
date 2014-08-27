@@ -8,4 +8,10 @@ register = template.Library()
 @register.filter
 def convert_timestamp( timestamp ):
 
-    return datetime.fromtimestamp( int( timestamp ) ).strftime( '%d-%m-%Y %H:%M:%S' )
+    try:
+        date = int( timestamp )
+
+    except ValueError:
+        return timestamp
+
+    return datetime.fromtimestamp( date ).strftime( '%d-%m-%Y %H:%M:%S' )

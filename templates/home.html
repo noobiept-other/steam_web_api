@@ -1,7 +1,31 @@
 {% extends "base.html" %}
+{% load steam_filters %}
 
 {% block content %}
 
 <p>Hi</p>
+
+{% if news %}
+    <table>
+        <tr>
+            <th>game</th>
+            <th>title</th>
+            <th>content</th>
+            <th>author</th>
+            <th>date</th>
+        </tr>
+        {% for new in news %}
+        <tr>
+            <td>{{ new.gameName }}</td>
+            <td>{{ new.title }}</td>
+            <td>{{ new.contents|safe }}</td>
+            <td>{{ new.author }}</td>
+            <td>{{ new.date|convert_timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No news.</p>
+{% endif %}
 
 {% endblock %}

@@ -3,14 +3,38 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
-from steam import steam_api
 
-import steam.utilities as utilities
+from steam import steam_api, utilities
 
 def home( request ):
 
-    context = {
+    news = []
 
+    if request.user.is_authenticated():
+        gamesOwned = request.user.get_games_played()
+        howMany = 2
+
+        for game in gamesOwned[ 'games' ]:
+            gameName = game[ 'name' ]
+            gameId = game[ 'appid' ]
+
+            gameNews = steam_api.getNewsForApp( gameId, howMany )
+
+            for new in gameNews:
+
+                new[ 'gameName' ] = gameName
+                new[ 'gameId' ] = gameId
+                news.append( new )
+
+
+
+        def sortNews( a ):
+            return a[ 'date' ]
+
+        news.sort( key= sortNews, reverse= True )
+
+    context = {
+        'news': news
     }
 
     utilities.get_message( request, context )
