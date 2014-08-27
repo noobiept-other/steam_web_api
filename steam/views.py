@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
+from django.utils.http import urlencode
 
 from steam import steam_api, utilities
 
@@ -16,6 +17,7 @@ def home( request ):
 
         for game in gamesOwned[ 'games' ]:
             gameName = game[ 'name' ]
+            gameIcon = game[ 'img_icon_url' ]
             gameId = game[ 'appid' ]
 
             gameNews = steam_api.getNewsForApp( gameId, howMany )
@@ -24,6 +26,7 @@ def home( request ):
 
                 new[ 'gameName' ] = gameName
                 new[ 'gameId' ] = gameId
+                new[ 'gameIcon' ] = gameIcon
                 news.append( new )
 
 
@@ -41,18 +44,6 @@ def home( request ):
 
     return render( request, 'home.html', context )
 
-def show_news( request ):
-
-    aomId = 266840
-    howMany = 3
-
-    context = {
-        'news': steam_api.getNewsForApp( aomId, howMany )
-    }
-
-    utilities.get_message( request, context )
-
-    return render( request, 'news.html', context )
 
 
 def app_list( request ):
@@ -101,23 +92,37 @@ def steam_profile( request, steamId ):
     return render( request, 'steam_profile.html', context )
 
 
-def game_stats( request, steamId, appId ):
+@login_required
+def game_stats( request, appId ):
 
-    stats = steam_api.getUserStatsForGame( steamId, appId )
+    steamId = request.user.steam_id
+
+    try:
+        stats = steam_api.getUserStatsForGame( steamId, appId )
+
+    except ValueError:
+
+        values = {
+            'url': request.path_info,
+            'reason': "Failed to get the user's stats for the game."
+        }
+        url = '{}?{}'.format( reverse( 'steam_api_failed' ), urlencode( values ) )
+
+        return HttpResponseRedirect( url )
 
     context = {
         'stats': stats
     }
 
-    return render( request, 'game_stats.html', context )
+    return render( request, 'game.html', context )
 
 
-def games_owned( request, steamId ):
 
-    games = steam_api.getOwnedGames( steamId )
+def steam_api_failed( request ):
 
     context = {
-        'games': games
+        'url': request.GET[ 'url' ],
+        'reason': request.GET[ 'reason' ]
     }
 
-    return render( request, 'games_owned.html', context )
+    return render( request, 'steam_api_failed.html', context )

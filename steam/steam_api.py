@@ -2,6 +2,7 @@ from django.conf import settings
 
 import requests
 
+# the functions raise a ValueError if it wasn't possible to get the data
 
 def getNewsForApp( appId, howMany, maxLength= 300 ):
     """
