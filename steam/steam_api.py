@@ -363,3 +363,166 @@ def _update_image_urls( theList ):
         app[ 'img_icon_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, app[ 'img_icon_url' ] )
         app[ 'img_logo_url' ] = 'http://media.steampowered.com/steamcommunity/public/images/apps/{}/{}.jpg'.format( appId, app[ 'img_logo_url' ] )
 
+
+
+def appDetails( appIds ):
+    """
+    :param appIds: list of ids
+    :return:
+        {
+            "appId":
+                {
+                    "success": bool,
+                    "data":
+                        {
+                            "type": str,    # game/movie/demo
+                            "name": str,
+                            "steam_appid": int,
+                            "required_age: int,
+                            "dlc": str[] (list of ids)  # optional
+                            "detailed_description": str (html),
+                            "about_the_game": str (html),
+                            "fullgame":     # optional (for movies/demos)
+                                {
+                                    "appid": str,
+                                    "name": str
+                                },
+                            "supported_languages": str (html),
+                            "header_image": str (url),
+                            "website": str (url),
+                            "pc_requirements":
+                                {
+                                    "minimum": str (html),
+                                    "recommended": str (html)
+                                },
+                            "mac_requirements":
+                                {
+                                    "minimum": str,
+                                    "recommended": str
+                                },
+                            "linux_requirements":
+                                {
+                                    "minimum": str,
+                                    "recommended": str
+                                },
+                            "developers": str[],
+                            "publishers": str[],
+                            "demos":        # optional
+                                {
+                                    "appid": str,
+                                    "description": str
+                                },
+                            "price_overview":   # optional (omitted if free-to-play)
+                                {
+                                    "currency": str,
+                                    "initial": str,
+                                    "final": str,
+                                    "discount_percent": int
+                                },
+                            "packages": str[],
+                            "package_groups":
+                                [
+                                    {
+                                        "name": str,    # default/subscriptions
+                                        "title": str,
+                                        "description": str,
+                                        "selection_text": str,
+                                        "save_text": str,
+                                        "display_type": str (of an int),
+                                        "is_recurring_subscription": str (of bool),
+                                        "subs":
+                                            [
+                                                {
+                                                    "packageid": str (of int),
+                                                    "percent_savings_text: str,
+                                                    "percent_savings": int,
+                                                    "option_text": str,
+                                                    "option_description" str,
+                                                    "can_get_free_license": str (of int)
+                                                },
+                                                (...)
+                                            ]
+                                    },
+                                    (...)
+                                ],
+                            "platforms":
+                                {
+                                    "windows": bool,
+                                    "mac" bool,
+                                    "linux": bool
+                                },
+                            "metacritic":   # optional
+                                {
+                                    "score": int,
+                                    "url": str (url)
+                                },
+                            "categories":
+                                [
+                                    {
+                                        "id": str (of an int),
+                                        "description": str
+                                    },
+                                    (...)
+                                ],
+                            "genres":
+                                [
+                                    {
+                                        "id": str (of an int),
+                                        "description": str
+                                    },
+                                    (...)
+                                ],
+                            "screenshots":
+                                [
+                                    {
+                                        "id": int,
+                                        "path_thumbnail": str (url),
+                                        "path_full": str (url)
+                                    },
+                                    (...)
+                                ],
+                            "movies":
+                                [
+                                    {
+                                        "id": str (of an int),
+                                        "name": str,
+                                        "thumbnail": str (url),
+                                        "webm":
+                                            {
+                                                "480": str (url),
+                                                "max": str (url)
+                                                (...)
+                                            },
+                                        "highlight": bool
+                                    },
+                                    (...)
+                                ],
+                            "recommendations":
+                                {
+                                    "total": int
+                                },
+                            "release_date":
+                                {
+                                    "coming_soon": bool,
+                                    "date": str
+                                },
+                            "support_info":
+                                {
+                                    "url": str,
+                                    "email": str
+                                }
+                        }
+                },
+
+            "anotherAppId: (...)
+        }
+
+    """
+
+    convertedToStr = [ str( a ) for a in appIds ]
+
+    url = 'http://store.steampowered.com/api/appdetails/?appids={}'.format( ','.join( convertedToStr ) )
+
+    r = requests.get( url )
+
+    return r.json()

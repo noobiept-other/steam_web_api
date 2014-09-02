@@ -93,12 +93,19 @@ def steam_profile( request, steamId ):
 
 
 @login_required
-def game_stats( request, appId ):
+def game( request, appId, whatToShow= None ):
 
     steamId = request.user.steam_id
+    context = {
+        'appId': appId
+    }
 
     try:
-        stats = steam_api.getUserStatsForGame( steamId, appId )
+        if whatToShow == 'stats':
+            context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
+
+        else:
+            context[ 'game_info' ] = steam_api.appDetails( [ appId ] )[ str( appId ) ][ 'data' ]
 
     except ValueError:
 
@@ -109,10 +116,6 @@ def game_stats( request, appId ):
         url = '{}?{}'.format( reverse( 'steam_api_failed' ), urlencode( values ) )
 
         return HttpResponseRedirect( url )
-
-    context = {
-        'stats': stats
-    }
 
     return render( request, 'game.html', context )
 
