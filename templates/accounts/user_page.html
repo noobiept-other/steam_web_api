@@ -76,8 +76,8 @@
         <tr>
             <td><img src="{{ game.img_icon_url }}" /></td>
             <td>{{ game.name }}</td>
-            <td>{{ game.playtime_2weeks }}m</td>
-            <td>{{ game.playtime_forever }}m</td>
+            <td>{{ game.playtime_2weeks|full_time }}</td>
+            <td>{{ game.playtime_forever|full_time }}</td>
             <td><img src="{{ game.img_logo_url }}" /></td>
         </tr>
         {% endfor %}
@@ -96,7 +96,7 @@
         {% for game in games_owned.games %}
         <tr>
             <td>{{ game.name }}</td>
-            <td>{{ game.playtime_forever }}m</td>
+            <td>{{ game.playtime_forever|full_time }}</td>
             <td><img src="{{ game.img_icon_url }}" /></td>
         </tr>
         {% endfor %}
