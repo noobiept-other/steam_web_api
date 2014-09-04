@@ -106,12 +106,13 @@ def game( request, appId, whatToShow= None ):
 
         else:
             context[ 'game_info' ] = steam_api.appDetails( [ appId ] )[ str( appId ) ][ 'data' ]
+            context[ 'current_players' ] = steam_api.getNumberOfCurrentPlayers( appId )
 
     except ValueError:
 
         values = {
             'url': request.path_info,
-            'reason': "Failed to get the user's stats for the game."
+            'reason': "Failed to get the information from steam."
         }
         url = '{}?{}'.format( reverse( 'steam_api_failed' ), urlencode( values ) )
 

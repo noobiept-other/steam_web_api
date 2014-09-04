@@ -525,4 +525,22 @@ def appDetails( appIds ):
 
     r = requests.get( url )
 
-    return r.json()
+    data = r.json()
+
+        # fix pricing (for whatever reason, the values returned don't have a dot (for example 399 instead of 3.99)
+    for key, value in data.items():
+
+        try:
+            priceOverview = value[ 'data' ][ 'price_overview' ]
+
+        except KeyError:    # free-to-play application, doesn't have 'price_overview' key
+            continue
+
+        initial = str( priceOverview[ 'initial' ] )
+        final = str( priceOverview[ 'final' ] )
+
+        priceOverview[ 'initial' ] = '{}.{}'.format( initial[ :-2 ], initial[ -2: ] )
+        priceOverview[ 'final' ] = '{}.{}'.format( final[ :-2 ], final[ -2: ] )
+
+
+    return data
