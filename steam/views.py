@@ -15,10 +15,10 @@ def home( request ):
         gamesOwned = request.user.get_games_played()
         howMany = 2
 
-        for game in gamesOwned[ 'games' ]:
-            gameName = game[ 'name' ]
-            gameIcon = game[ 'img_icon_url' ]
-            gameId = game[ 'appid' ]
+        for aGame in gamesOwned[ 'games' ]:
+            gameName = aGame[ 'name' ]
+            gameIcon = aGame[ 'img_icon_url' ]
+            gameId = aGame[ 'appid' ]
 
             gameNews = steam_api.getNewsForApp( gameId, howMany )
 
@@ -57,39 +57,6 @@ def app_list( request ):
     return render( request, 'app_list.html', context )
 
 
-def global_achievement_percentages( request, appId ):
-
-    context = {
-        'achievements': steam_api.getGlobalAchievementPercentagesForApp( appId )
-    }
-
-    utilities.get_message( request, context )
-
-    return render( request, 'global_achievement_percentages.html', context )
-
-
-def steam_profile( request, steamId ):
-
-    profile = steam_api.getPlayerSummaries( [ steamId ] )[ 0 ]
-
-    friendsList = steam_api.getFriendList( steamId )
-
-    friendsId = [ a[ 'steamid' ] for a in friendsList ]
-
-        # get the names of the friends
-    friendsProfiles = steam_api.getPlayerSummaries( friendsId )
-    recentlyPlayedGames = steam_api.getRecentlyPlayedGames( steamId )
-
-    context = {
-        'profile': profile,
-        'steamId': steamId,
-        'friendsProfile': friendsProfiles,
-        'recentlyPlayedGames': recentlyPlayedGames
-    }
-
-    utilities.get_message( request, context )
-
-    return render( request, 'steam_profile.html', context )
 
 
 @login_required
@@ -103,6 +70,9 @@ def game( request, appId, whatToShow= None ):
     try:
         if whatToShow == 'stats':
             context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
+
+        elif whatToShow == 'global_achievements':
+            context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
 
         else:
             context[ 'game_info' ] = steam_api.appDetails( [ appId ] )[ str( appId ) ][ 'data' ]

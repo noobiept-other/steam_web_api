@@ -9,6 +9,9 @@
     <li {% if stats %}class="entrySelected" {% endif %}>
         <a href="{% url 'game_specify' appId 'stats' %}">stats</a>
     </li>
+    <li {% if global_achievements %}class="entrySelected"{% endif %}>
+        <a href="{% url 'game_specify' appId 'global_achievements' %}">global achievements</a>
+    </li>
 </ul>
 
 {% if stats %}
@@ -120,6 +123,24 @@
         <li>{{ pub }}</li>
     {% endfor %}
     </ul>
+{% endif %}
+
+
+{% if global_achievements %}
+
+    <table>
+        <tr>
+            <th>name</th>
+            <th>percent</th>
+        </tr>
+        {% for achievement in global_achievements %}
+        <tr>
+            <td>{{ achievement.name }}</td>
+            <td>{{ achievement.percent|floatformat:"2" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
 {% endif %}
 
 

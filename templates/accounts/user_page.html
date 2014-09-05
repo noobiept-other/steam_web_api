@@ -6,7 +6,7 @@
 
     <p><img src="{{ steamInfo.avatarfull }}" /></p>
     <h2>
-    <img src="{{ steamInfo.avatar }}" /> name: <a href="{{ steamInfo.profileurl }}">{{ steamInfo.personaname }}</a>
+    <img src="{{ steamInfo.avatar }}" /> name: <a href="{{ steamInfo.profileurl }}" target="_blank">{{ steamInfo.personaname }}</a>
 
         <ul class="horizontalList">
             {% if user.is_staff %}
@@ -30,7 +30,6 @@
         <ul>
         {% if user.username == pageUser.username %}
             <li><a href="{% url 'accounts:check_message' %}">See messages</a></li>
-            <li><a href="{% url 'accounts:change_password' %}">change password</a></li>
         {% else %}
             <li><a href="{% url 'accounts:send_message' pageUser.username %}">Send private message</a></li>
         {% endif %}
@@ -74,7 +73,7 @@
         </tr>
         {% for game in games_played.games %}
         <tr>
-            <td><img src="{{ game.img_icon_url }}" /></td>
+            <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
             <td>{{ game.name }}</td>
             <td>{{ game.playtime_2weeks|full_time }}</td>
             <td>{{ game.playtime_forever|full_time }}</td>
@@ -89,15 +88,15 @@
 
     <table>
         <tr>
+            <th>icon</th>
             <th>name</th>
             <th>playtime</th>
-            <th>icon</th>
         </tr>
         {% for game in games_owned.games %}
         <tr>
+            <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
             <td>{{ game.name }}</td>
             <td>{{ game.playtime_forever|full_time }}</td>
-            <td><img src="{{ game.img_icon_url }}" /></td>
         </tr>
         {% endfor %}
     </table>

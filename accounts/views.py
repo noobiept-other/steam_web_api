@@ -10,27 +10,6 @@ from accounts.decorators import must_be_staff
 import steam.utilities as utilities
 
 
-def new_account( request ):
-
-    if request.method == 'POST':
-
-        form = MyUserCreationForm( request.POST )
-
-        if form.is_valid():
-
-            form.save()
-            return HttpResponseRedirect( reverse( 'accounts:login' ) )
-
-    else:
-        form = MyUserCreationForm()
-
-    context = {
-        'form': form
-    }
-
-    return render( request, 'accounts/new_account.html', context )
-
-
 def user_page( request, steamId, whatToShow= None ):
 
     userModel = get_user_model()
@@ -160,9 +139,3 @@ def set_moderator( request, username ):
 
     return HttpResponseRedirect( user.get_url() )
 
-
-def password_changed( request ):
-
-    utilities.set_message( request, 'Password changed' )
-
-    return HttpResponseRedirect( reverse( 'home' ) )
