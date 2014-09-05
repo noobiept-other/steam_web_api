@@ -38,69 +38,78 @@
 
 
     <ul class="horizontalList">
-        <li {% if games_played %}class="entrySelected" {% endif %}>
+        <li {% if show_games_played %}class="entrySelected" {% endif %}>
             <a href="{% url 'accounts:user_page' pageUser.steam_id %}">games played recently</a>
         </li>
-        <li {% if friends %}class="entrySelected" {% endif %}>
+        <li {% if show_friends %}class="entrySelected" {% endif %}>
             <a href="{% url 'accounts:user_page_specify' pageUser.steam_id 'friends' %}">friends</a>
         </li>
-        <li {% if games_owned %}class="entrySelected" {% endif %}>
+        <li {% if show_games_owned %}class="entrySelected" {% endif %}>
             <a href="{% url 'accounts:user_page_specify' pageUser.steam_id 'games_owned' %}">games owned</a>
         </li>
     </ul>
 
-    {% if friends %}
-    <table>
-        <tr>
-            <th>Name</th>
-        </tr>
-        {% for friend in friends %}
-        <tr>
-            <td>{{ friend.personaname }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
+    {% if show_friends %}
+        {% if friends %}
+            <table>
+                <tr>
+                    <th>Name</th>
+                </tr>
+                {% for friend in friends %}
+                <tr>
+                    <td>{{ friend.personaname }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No friends yet.</p>
+        {% endif %}
 
-    {% if games_played %}
-    <table>
-        <tr>
-            <th>icon</th>
-            <th>name</th>
-            <th>playtime last 2 weeks</th>
-            <th>playtime on record</th>
-            <th>logo</th>
-        </tr>
-        {% for game in games_played.games %}
-        <tr>
-            <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
-            <td>{{ game.name }}</td>
-            <td>{{ game.playtime_2weeks|full_time }}</td>
-            <td>{{ game.playtime_forever|full_time }}</td>
-            <td><img src="{{ game.img_logo_url }}" /></td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
+    {% elif show_games_played %}
+        {% if games_played %}
+            <table>
+                <tr>
+                    <th>icon</th>
+                    <th>name</th>
+                    <th>playtime last 2 weeks</th>
+                    <th>playtime on record</th>
+                    <th>logo</th>
+                </tr>
+                {% for game in games_played.games %}
+                <tr>
+                    <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.playtime_2weeks|full_time }}</td>
+                    <td>{{ game.playtime_forever|full_time }}</td>
+                    <td><img src="{{ game.img_logo_url }}" /></td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No games played yet.</p>
+        {% endif %}
 
-    {% if games_owned %}
-    <p>Game count: {{ games_owned.game_count }}</p>
+    {% elif show_games_owned %}
+        {% if games_owned %}
+            <p>Game count: {{ games_owned.game_count }}</p>
 
-    <table>
-        <tr>
-            <th>icon</th>
-            <th>name</th>
-            <th>playtime</th>
-        </tr>
-        {% for game in games_owned.games %}
-        <tr>
-            <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
-            <td>{{ game.name }}</td>
-            <td>{{ game.playtime_forever|full_time }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-
+            <table>
+                <tr>
+                    <th>icon</th>
+                    <th>name</th>
+                    <th>playtime</th>
+                </tr>
+                {% for game in games_owned.games %}
+                <tr>
+                    <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
+                    <td>{{ game.name }}</td>
+                    <td>{{ game.playtime_forever|full_time }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No games owned yet.</p>
+        {% endif %}
     {% endif %}
 
 

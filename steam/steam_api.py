@@ -536,11 +536,8 @@ def appDetails( appIds ):
         except KeyError:    # free-to-play application, doesn't have 'price_overview' key
             continue
 
-        initial = str( priceOverview[ 'initial' ] )
-        final = str( priceOverview[ 'final' ] )
-
-        priceOverview[ 'initial' ] = '{}.{}'.format( initial[ :-2 ], initial[ -2: ] )
-        priceOverview[ 'final' ] = '{}.{}'.format( final[ :-2 ], final[ -2: ] )
+        priceOverview[ 'initial' ] /= 100
+        priceOverview[ 'final' ] /= 100
 
 
     return data

@@ -70,13 +70,16 @@ def game( request, appId, whatToShow= None ):
     try:
         if whatToShow == 'stats':
             context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
+            context[ 'show_stats' ] = True
 
         elif whatToShow == 'global_achievements':
             context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
+            context[ 'show_global_achievements' ] = True
 
         else:
             context[ 'game_info' ] = steam_api.appDetails( [ appId ] )[ str( appId ) ][ 'data' ]
             context[ 'current_players' ] = steam_api.getNumberOfCurrentPlayers( appId )
+            context[ 'show_game_info' ] = True
 
     except ValueError:
 

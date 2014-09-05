@@ -3,18 +3,18 @@
 {% block content %}
 
 <ul class="horizontalList">
-    <li {% if game_info %}class="entrySelected"{% endif %}>
+    <li {% if show_game_info %}class="entrySelected"{% endif %}>
         <a href="{% url 'game' appId %}">game info</a>
     </li>
-    <li {% if stats %}class="entrySelected" {% endif %}>
+    <li {% if show_stats %}class="entrySelected" {% endif %}>
         <a href="{% url 'game_specify' appId 'stats' %}">stats</a>
     </li>
-    <li {% if global_achievements %}class="entrySelected"{% endif %}>
+    <li {% if show_global_achievements %}class="entrySelected"{% endif %}>
         <a href="{% url 'game_specify' appId 'global_achievements' %}">global achievements</a>
     </li>
 </ul>
 
-{% if stats %}
+{% if show_stats and stats %}
     <h1>{{ stats.gameName }}</h1>
     <h2>Statistics</h2>
 
@@ -49,99 +49,101 @@
     {% else %}
         <p>No achievements yet.</p>
     {% endif %}
-{% endif %}
 
-{% if game_info %}
-    <h2><a href="{{ game_info.website }}">{{ game_info.name }}</a></h2>
-    <img src="{{ game_info.header_image }}" />
+{% elif show_game_info %}
+    {% if game_info %}
+        <h2><a href="{{ game_info.website }}">{{ game_info.name }}</a></h2>
+        <img src="{{ game_info.header_image }}" />
 
-    <p>{{ game_info.detailed_description|safe }}</p>
+        <p>{{ game_info.detailed_description|safe }}</p>
 
-    <p>
-        Price:
-        {% if game_info.price_overview %}
-            {{ game_info.price_overview.final }} {{ game_info.price_overview.currency }}
-        {% else %}
-            free-to-play
-        {% endif %}
-    </p>
-    <p>
-        Current players: {{ current_players }}
-    </p>
-    <p>
-        Platforms:
-        {% if game_info.platforms.windows %}windows{% endif %}
-        {% if game_info.platforms.mac %}mac{% endif %}
-        {% if game_info.platforms.linux %}linux{% endif %}
-    </p>
+        <p>
+            Price:
+            {% if game_info.price_overview %}
+                {{ game_info.price_overview.final }} {{ game_info.price_overview.currency }}
+            {% else %}
+                free-to-play
+            {% endif %}
+        </p>
+        <p>
+            Current players: {{ current_players }}
+        </p>
+        <p>
+            Platforms:
+            {% if game_info.platforms.windows %}windows{% endif %}
+            {% if game_info.platforms.mac %}mac{% endif %}
+            {% if game_info.platforms.linux %}linux{% endif %}
+        </p>
 
-    <h3>Release date</h3>
-    <p>{{ game_info.release_date.date }}</p>
+        <h3>Release date</h3>
+        <p>{{ game_info.release_date.date }}</p>
 
-    <p><a href="{{ game_info.metacritic.url }}">Score: {{ game_info.metacritic.score }}</a></p>
+        <p><a href="{{ game_info.metacritic.url }}">Score: {{ game_info.metacritic.score }}</a></p>
 
-    <h3>Categories</h3>
-    <ul class="horizontalList">
-    {% for category in game_info.categories %}
-        <li>{{ category.description }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>Genres</h3>
-    <ul class="horizontalList">
-    {% for genre in game_info.genres %}
-        <li>{{ genre.description }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>Screenshots</h3>
-    <p>
-    {% for screenshot in game_info.screenshots %}
-        <img src="{{ screenshot.path_thumbnail }}" />
-    {% endfor %}
-    </p>
-
-    <h3>Movies</h3>
-    <p>
-    {% for movie in game_info.movies %}
-        <video width="200" height="200">
-            <source src="{{ movie.webm.480 }}" />
-        </video>
-    {% endfor %}
-    </p>
-
-    <h3>Developers</h3>
-    <ul class="horizontalList">
-    {% for dev in game_info.developers %}
-        <li>{{ dev }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>Publishers</h3>
-    <ul class="horizontalList">
-    {% for pub in game_info.publishers %}
-        <li>{{ pub }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
-
-
-{% if global_achievements %}
-
-    <table>
-        <tr>
-            <th>name</th>
-            <th>percent</th>
-        </tr>
-        {% for achievement in global_achievements %}
-        <tr>
-            <td>{{ achievement.name }}</td>
-            <td>{{ achievement.percent|floatformat:"2" }}</td>
-        </tr>
+        <h3>Categories</h3>
+        <ul class="horizontalList">
+        {% for category in game_info.categories %}
+            <li>{{ category.description }}</li>
         {% endfor %}
-    </table>
+        </ul>
 
+        <h3>Genres</h3>
+        <ul class="horizontalList">
+        {% for genre in game_info.genres %}
+            <li>{{ genre.description }}</li>
+        {% endfor %}
+        </ul>
+
+        <h3>Screenshots</h3>
+        <p>
+        {% for screenshot in game_info.screenshots %}
+            <img src="{{ screenshot.path_thumbnail }}" />
+        {% endfor %}
+        </p>
+
+        <h3>Movies</h3>
+        <p>
+        {% for movie in game_info.movies %}
+            <video width="200" height="200">
+                <source src="{{ movie.webm.480 }}" />
+            </video>
+        {% endfor %}
+        </p>
+
+        <h3>Developers</h3>
+        <ul class="horizontalList">
+        {% for dev in game_info.developers %}
+            <li>{{ dev }}</li>
+        {% endfor %}
+        </ul>
+
+        <h3>Publishers</h3>
+        <ul class="horizontalList">
+        {% for pub in game_info.publishers %}
+            <li>{{ pub }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No game info yet.</p>
+    {% endif %}
+
+{% elif show_global_achievements %}
+    {% if global_achievements %}
+        <table>
+            <tr>
+                <th>name</th>
+                <th>percent</th>
+            </tr>
+            {% for achievement in global_achievements %}
+            <tr>
+                <td>{{ achievement.name }}</td>
+                <td>{{ achievement.percent|floatformat:"2" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No global achievements yet.</p>
+    {% endif %}
 {% endif %}
-
 
 {% endblock %}

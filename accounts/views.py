@@ -26,13 +26,16 @@ def user_page( request, steamId, whatToShow= None ):
     }
 
     if whatToShow == 'friends':
-        context [ 'friends' ] = user.get_friends()
+        context[ 'friends' ] = user.get_friends()
+        context[ 'show_friends' ] = True
 
     elif whatToShow == 'games_owned':
         context[ 'games_owned' ] = user.get_games_owned()
+        context[ 'show_games_owned' ] = True
 
     else:
         context[ 'games_played' ] = user.get_games_played()
+        context[ 'show_games_played' ] = True
 
     utilities.get_message( request, context )
 
