@@ -104,7 +104,7 @@
         <h3>Movies</h3>
         <p>
         {% for movie in game_info.movies %}
-            <video width="200" height="200">
+            <video width="300" height="300" controls="controls" poster="{{ movie.thumbnail }}">
                 <source src="{{ movie.webm.480 }}" />
             </video>
         {% endfor %}

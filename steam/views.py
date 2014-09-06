@@ -20,7 +20,7 @@ def home( request ):
             gameIcon = aGame[ 'img_icon_url' ]
             gameId = aGame[ 'appid' ]
 
-            gameNews = steam_api.getNewsForApp( gameId, howMany )
+            gameNews = steam_api.getNewsForApp( gameId, howMany, 300 )
 
             for new in gameNews:
 
@@ -81,7 +81,8 @@ def game( request, appId, whatToShow= None ):
             context[ 'current_players' ] = steam_api.getNumberOfCurrentPlayers( appId )
             context[ 'show_game_info' ] = True
 
-    except ValueError:
+
+    except steam_api.SteamApiError:
 
         values = {
             'url': request.path_info,

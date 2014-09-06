@@ -9,7 +9,7 @@
     </tr>
     {% for app in apps %}
     <tr>
-        <td>{{ app.name }}</td>
+        <td><a href="{% url 'game' app.appid %}" target="_blank">{{ app.name }}</a></td>
         <td>{{ app.appid }}</td>
     </tr>
     {% endfor %}
