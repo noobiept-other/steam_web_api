@@ -27,7 +27,7 @@
         </tr>
         {% for new in news %}
         <tr>
-            <td><a href="{% url 'game' new.gameId %}" target="_blank"><img src="{{ new.gameIcon }}" title="{{ new.gameName }}" /></a></td>
+            <td><a href="{% url 'game' new.gameId %}" target="_blank"><img class="gameIcon" src="{{ new.gameIcon }}" title="{{ new.gameName }}" /></a></td>
             <td><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
             <td>{{ new.contents|safe }}</td>
             <td>{{ new.author }}</td>

@@ -85,6 +85,10 @@ def game( request, appId, whatToShow= None ):
             context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
             context[ 'show_global_achievements' ] = True
 
+        elif whatToShow == 'news':
+            context[ 'news' ] = steam_api.getNewsForApp( appId, 10, 500 )
+            context[ 'show_news' ] = True
+
         else:
             context[ 'game_info' ] = steam_api.appDetails( [ appId ] )[ str( appId ) ][ 'data' ]
             context[ 'current_players' ] = steam_api.getNumberOfCurrentPlayers( appId )

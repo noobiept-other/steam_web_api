@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load steam_filters %}
 
 {% block content %}
 
@@ -11,6 +12,9 @@
     </li>
     <li {% if show_global_achievements %}class="entrySelected"{% endif %}>
         <a href="{% url 'game_specify' appId 'global_achievements' %}">global achievements</a>
+    </li>
+    <li {% if show_news %}class="entrySelected" {% endif %}>
+        <a href="{% url 'game_specify' appId 'news' %}">news</a>
     </li>
 </ul>
 
@@ -144,6 +148,29 @@
     {% else %}
         <p>No global achievements yet.</p>
     {% endif %}
+
+{% elif show_news %}
+    {% if news %}
+        <table>
+            <tr>
+                <th>title</th>
+                <th>content</th>
+                <th>author</th>
+                <th>date</th>
+            </tr>
+            {% for new in news %}
+            <tr>
+                <td><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
+                <td>{{ new.contents|safe }}</td>
+                <td>{{ new.author }}</td>
+                <td>{{ new.date|convert_timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No news.</p>
+    {% endif %}
 {% endif %}
+
 
 {% endblock %}

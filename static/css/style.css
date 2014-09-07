@@ -20,3 +20,9 @@
     {
     background-color: rgba(22, 157, 17, 0.16);
     }
+
+.gameIcon
+    {
+    max-width: 50px;
+    max-height: 50px;
+    }
