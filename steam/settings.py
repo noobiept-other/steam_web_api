@@ -1,3 +1,5 @@
+from django.core.urlresolvers import reverse_lazy
+
 import os.path
 
 SETTINGS_DIR = os.path.dirname( os.path.abspath(__file__) )
@@ -109,7 +111,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'steam.urls'
 
-LOGIN_URL = 'accounts:login'
+LOGIN_URL = reverse_lazy( 'social:begin', args=[ 'steam' ] )
 LOGOUT_URL = 'accounts:logout'
 LOGIN_REDIRECT_URL = '/'
 
