@@ -6,6 +6,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
 
     url( r'^$', 'steam.views.home', name= 'home' ),
+    url( r'^home/(?P<whatToShow>\w+)$', 'steam.views.home', name= 'home_specify' ),
     url( r'^app_list$', 'steam.views.app_list', name= 'app_list' ),
     url( r'^game/(?P<appId>\d+)$', 'steam.views.game', name= 'game' ),
     url( r'^game/(?P<appId>\d+)/(?P<whatToShow>\w+)$', 'steam.views.game', name= 'game_specify' ),

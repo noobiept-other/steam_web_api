@@ -7,15 +7,25 @@ from django.utils.http import urlencode
 
 from steam import steam_api, utilities
 
-def home( request ):
+def home( request, whatToShow= None ):
 
     news = []
+    context = {}
+    user = request.user
 
-    if request.user.is_authenticated():
-        gamesOwned = request.user.get_games_played()
+    if user.is_authenticated():
+
+        if whatToShow == 'owned':
+            apps = user.get_games_owned()
+            context[ 'show_owned_apps' ] = True
+
+        else:
+            apps = user.get_games_played()
+            context[ 'show_recently_played' ] = True
+
         howMany = 2
 
-        for aGame in gamesOwned[ 'games' ]:
+        for aGame in apps[ 'games' ]:
             gameName = aGame[ 'name' ]
             gameIcon = aGame[ 'img_icon_url' ]
             gameId = aGame[ 'appid' ]
@@ -36,9 +46,8 @@ def home( request ):
 
         news.sort( key= sortNews, reverse= True )
 
-    context = {
-        'news': news
-    }
+    context[ 'news' ] = news
+
 
     utilities.get_message( request, context )
 

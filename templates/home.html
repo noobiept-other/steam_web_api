@@ -3,7 +3,18 @@
 
 {% block content %}
 
-<p>Hi</p>
+<p>News List</p>
+
+
+<ul class="horizontalList">
+    <li {% if show_recently_played %}class="entrySelected"{% endif %}>
+        <a href="{% url 'home' %}">Recently Played</a>
+    </li>
+    <li {% if show_owned_apps %}class="entrySelected"{% endif %}>
+        <a href="{% url 'home_specify' 'owned' %}">Owned</a>
+    </li>
+</ul>
+
 
 {% if news %}
     <table>

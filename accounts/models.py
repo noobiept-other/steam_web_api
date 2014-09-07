@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from steam import steam_api
 
+
 class Account( AbstractUser ):
 
     steam_id = models.IntegerField( unique= True, blank= True, null= True )
@@ -48,6 +49,7 @@ class Account( AbstractUser ):
 
     def get_games_owned(self):
         return steam_api.getOwnedGames( self.steam_id )
+
 
 
 class PrivateMessage( models.Model ):
