@@ -12,7 +12,7 @@ from accounts.decorators import must_be_staff, must_be_moderator
 from steam import utilities
 
 
-def user_page( request, steamId, whatToShow= None ):
+def user_page( request, username, whatToShow= None ):
     """
         The user page has information about an user account.
         Also where you can change some settings (like the password).
@@ -20,7 +20,7 @@ def user_page( request, steamId, whatToShow= None ):
     userModel = get_user_model()
 
     try:
-        user = userModel.objects.get( steam_id= steamId )
+        user = userModel.objects.get( username= username )
 
     except userModel.DoesNotExist:
         raise Http404( "User doesn't exist." )

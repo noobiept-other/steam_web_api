@@ -20,4 +20,4 @@ def account_name( user ):
     else:
         accountType = 'normal'
 
-    return safe( '<a href="{}" class="Accounts-{}" title="{}">{}</a>'.format( user.get_url(), accountType, accountType, user.username ) )
+    return safe( '<a href="{}" class="Accounts-{}" title="{}">{}</a>'.format( user.get_url(), accountType, accountType, user.get_persona_name() ) )

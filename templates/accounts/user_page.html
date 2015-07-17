@@ -62,13 +62,13 @@
 
     <ul class="horizontalList">
         <li {% if show_games_played %}class="entrySelected" {% endif %}>
-            <a href="{% url 'accounts:user_page' pageUser.steam_id %}">games played recently</a>
+            <a href="{% url 'accounts:user_page' pageUser.username %}">games played recently</a>
         </li>
         <li {% if show_friends %}class="entrySelected" {% endif %}>
-            <a href="{% url 'accounts:user_page_specify' pageUser.steam_id 'friends' %}">friends</a>
+            <a href="{% url 'accounts:user_page_specify' pageUser.username 'friends' %}">friends</a>
         </li>
         <li {% if show_games_owned %}class="entrySelected" {% endif %}>
-            <a href="{% url 'accounts:user_page_specify' pageUser.steam_id 'games_owned' %}">games owned</a>
+            <a href="{% url 'accounts:user_page_specify' pageUser.username 'games_owned' %}">games owned</a>
         </li>
     </ul>
 

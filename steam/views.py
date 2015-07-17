@@ -71,7 +71,7 @@ def app_list( request ):
 @login_required
 def game( request, appId, whatToShow= None ):
 
-    steamId = request.user.steam_id
+    steamId = request.user.username
     context = {
         'appId': appId
     }

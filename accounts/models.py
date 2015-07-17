@@ -10,10 +10,9 @@ from steam import steam_api
 class Account( AbstractUser ):
 
     is_moderator = models.BooleanField( default= False )
-    steam_id = models.IntegerField( unique= True, blank= True, null= True )
 
     def get_url(self):
-        return reverse( 'accounts:user_page', args= [ self.steam_id ] )
+        return reverse( 'accounts:user_page', args= [ self.username ] )
 
     def has_moderator_rights(self):
         if self.is_staff or self.is_moderator:
@@ -46,18 +45,21 @@ class Account( AbstractUser ):
         """
         return self.get_user_social_auth().extra_data[ 'player' ]
 
+    def get_persona_name(self):
+        return self.get_steam_extra_data()[ 'personaname' ]
+
     def get_friends(self):
-        friends = steam_api.getFriendList( self.steam_id )
+        friends = steam_api.getFriendList( self.username )
 
         friendsId = [ a[ 'steamid' ] for a in friends ]
 
         return steam_api.getPlayerSummaries( friendsId )
 
     def get_games_played(self):
-        return steam_api.getRecentlyPlayedGames( self.steam_id )
+        return steam_api.getRecentlyPlayedGames( self.username )
 
     def get_games_owned(self):
-        return steam_api.getOwnedGames( self.steam_id )
+        return steam_api.getOwnedGames( self.username )
 
 
 

@@ -1,16 +1,11 @@
-USER_FIELDS = ['username', 'email']
+def get_username( strategy, details, user= None, *args, **kwargs ):
+    """
+        Use the 'steamid' as the account username.
+    """
+    if not user:
+        username = details[ 'player' ][ 'steamid' ]
 
+    else:
+        username = strategy.storage.user.get_username( user )
 
-def update_profile( *args, **kwargs ):
-
-    user = kwargs[ 'user' ]
-    details = kwargs[ 'details' ]
-
-    isNew = kwargs[ 'is_new' ]
-
-    if isNew:
-        steamId = details[ 'player' ][ 'steamid' ]
-
-        user.steam_id = steamId
-        user.save()
-
+    return { 'username': username }
