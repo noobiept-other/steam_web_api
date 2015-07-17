@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load accounts %}
 
 {% block scripts %}
     {% load static %}
 
     <script type="text/javascript" src="{% static 'accounts/check_messages.js' %}"></script>
     <script type="text/javascript" src="{% static 'accounts/tooltip.js' %}"></script>
-
-    <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -23,11 +22,17 @@
             <th>date</th>
         </tr>
         {% for message in messages %}
-            <tr class="clickableRow contentPreview" data-url="{{ message.get_url }}" data-content="{{ message.content|linebreaksbr|truncatewords:20 }}">
-                <td><a href="{{ message.get_url }}">{{ message.sender }}</a></td>
-                <td>{{ message.title|truncatewords:20 }}</td>
+            <tr class="clickableRow contentPreview" data-url="{{ message.get_url }}" data-content="{{ message.content|linebreaksbr|truncatewords:50 }}">
+                <td>
+                    {% if not message.has_been_read %}
+                        <span class="red" title="Unread message!">!</span>
+                    {% endif %}
+
+                    {{ message.sender|account_name }}
+                </td>
+                <td>{{ message.title|truncatewords:25 }}</td>
                 <td>{{ message.date_created|naturaltime }}</td>
-                <td><a href="{% url 'accounts:remove_message' message.id %}">X</a></td>
+                <td><a href="{% url 'accounts:message_remove_confirm' message.id %}" title="Remove Message">X</a></td>
             </tr>
         {% endfor %}
     </table>

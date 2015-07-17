@@ -9,11 +9,20 @@ from steam import steam_api
 
 class Account( AbstractUser ):
 
-    steam_id = models.IntegerField( unique= True, blank= True, null= True )
     is_moderator = models.BooleanField( default= False )
+    steam_id = models.IntegerField( unique= True, blank= True, null= True )
 
     def get_url(self):
-        return reverse( 'accounts:user_page', args= [ self.username ] )
+        return reverse( 'accounts:user_page', args= [ self.steam_id ] )
+
+    def has_moderator_rights(self):
+        if self.is_staff or self.is_moderator:
+            return True
+
+        return False
+
+    def how_many_unread_messages(self):
+        return self.privatemessage_set.filter( has_been_read= False ).count()
 
     def get_user_social_auth(self):
         return self.social_auth.filter( provider= 'steam' )[ 0 ]
@@ -58,10 +67,14 @@ class PrivateMessage( models.Model ):
     sender = models.ForeignKey( settings.AUTH_USER_MODEL, related_name= 'sender' )
     title = models.TextField( max_length= 100 )
     content = models.TextField( max_length= 500 )
-    date_created = models.DateTimeField( help_text= 'Date Created', default= lambda: timezone.localtime( timezone.now() ) )
+    date_created = models.DateTimeField( help_text= 'Date Created', default= timezone.now )
+    has_been_read = models.BooleanField( default= False )
 
     def __str__(self):
         return self.title
 
     def get_url(self):
-        return reverse( 'accounts:open_message', args= [ self.id ] )
+        return reverse( 'accounts:message_open', args= [ self.id ] )
+
+    class Meta:
+        ordering = [ '-date_created' ]

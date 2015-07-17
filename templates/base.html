@@ -1,9 +1,11 @@
 {% load static %}
+{% load accounts %}
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hi</title>
+    <meta charset="utf-8" />
+    <title>Steam</title>
 
     {% block scripts %}{% endblock %}
 
@@ -12,20 +14,23 @@
 <body>
 
 <div id="Menu">
-    <a href="{% url 'home' %}">Home</a>
-
-    {% if user.is_authenticated %}
-        <a href="{% url 'accounts:user_page' user.steam_id %}">{{ user.username }}</a>
-        <a href="{% url 'accounts:logout' %}?next={{ request.get_full_path|urlencode }}">logout</a>
-    {% else %}
-        <a href="{% url 'social:begin' 'steam' %}?next={{ request.get_full_path|urlencode }}"><img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_large_border.png" alt="login" title="login" /></a>
-    {% endif %}
-
-    <a href="{% url 'app_list' %}">app list</a>
+    <ul class="horizontalList">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li>
+        {% if user.is_authenticated %}
+            {{ user|account_name }} ( <a href="{% url 'accounts:logout' %}?next={{ request.get_full_path|urlencode }}">logout</a> )
+        {% else %}
+            <a href="{% url 'social:begin' 'steam' %}?next={{ request.get_full_path|urlencode }}"><img src="http://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_large_border.png" alt="login" title="login" /></a>
+        {% endif %}
+        </li>
+        <li>
+            <a href="{% url 'app_list' %}">app list</a>
+        </li>
+    </ul>
 </div>
 
-{% if message %}
-    <p id="Message">{{ message }}</p>
+{% if MESSAGE %}
+    <p id="Message">{{ MESSAGE }}</p>
 {% endif %}
 
 {% block content %}{% endblock %}

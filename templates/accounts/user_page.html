@@ -1,23 +1,40 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load accounts %}
 {% load steam_filters %}
 
 {% block content %}
 
     <p><img src="{{ steamInfo.avatarfull }}" /></p>
-    <h2>
     <img src="{{ steamInfo.avatar }}" /> name: <a href="{{ steamInfo.profileurl }}" target="_blank">{{ steamInfo.personaname }}</a>
+    <h2>
+        {{ pageUser|account_name }}
 
         <ul class="horizontalList">
+            {% if user.is_moderator or user.is_staff %}
+            <li>
+                <a href="{% url 'accounts:disable_confirm' pageUser.username %}">
+                    {% if pageUser.is_active %}
+                        disable
+                    {% else %}
+                        enable
+                    {% endif %}
+                </a>
+            </li>
+            {% endif %}
+
             {% if user.is_staff %}
             <li>
-                <a href="{% url 'accounts:set_moderator' pageUser.username %}">
+                <a href="{% url 'accounts:set_moderator_confirm' pageUser.username %}">
                     {% if pageUser.is_moderator %}
                         un-mod
                     {% else %}
                         mod
                     {% endif %}
                 </a>
+            </li>
+            <li>
+                <a href="{% url 'accounts:remove_confirm' pageUser.username %}">remove</a>
             </li>
             {% endif %}
         </ul>
@@ -29,9 +46,15 @@
     {% if user.is_authenticated %}
         <ul>
         {% if user.username == pageUser.username %}
-            <li><a href="{% url 'accounts:check_message' %}">See messages</a></li>
+            <li>
+                <a href="{% url 'accounts:message_all' %}">See messages
+                    {% if unreadMessages %}
+                        (<em>{{ unreadMessages }}</em> unread)
+                    {% endif %}
+                </a>
+            </li>
         {% else %}
-            <li><a href="{% url 'accounts:send_message' pageUser.username %}">Send private message</a></li>
+            <li><a href="{% url 'accounts:message_send' pageUser.username %}">Send private message</a></li>
         {% endif %}
         </ul>
     {% endif %}
@@ -111,6 +134,5 @@
             <p>No games owned yet.</p>
         {% endif %}
     {% endif %}
-
 
 {% endblock %}
