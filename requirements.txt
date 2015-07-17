@@ -1,5 +1,5 @@
 # python 3.4
 
-django >= 1.6, <= 1.7
-requests == 2.3
-python-social-auth== 0.1.26
+django >= 1.8, < 1.9
+requests == 2.7
+python-social-auth== 0.2.12
