@@ -45,13 +45,13 @@ def getNewsForApp( appId: int, howMany: int= None, maxLength: int= None ) -> lis
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'appnews' ][ 'newsitems' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'appnews.newsitems' key." )
 
     return result
 
@@ -73,13 +73,13 @@ def getAppList():
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'applist' ][ 'apps' ][ 'app' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'applist.apps.app' key." )
 
     return result
 
@@ -102,13 +102,13 @@ def getGlobalAchievementPercentagesForApp( appId ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'achievementpercentages' ][ 'achievements' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'achievementpercentages.achievements' key." )
 
     return result
 
@@ -148,13 +148,13 @@ def getPlayerSummaries( steamIds ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ][ 'players' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response.players' key." )
 
     return result
 
@@ -181,13 +181,13 @@ def getFriendList( steamId, relationship= 'friend' ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'friendslist' ][ 'friends' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'friendslist.friends' key." )
 
     return result
 
@@ -218,13 +218,13 @@ def getPlayerAchievements( steamId, appId, language= 'english' ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'playerstats' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'playerstats' key." )
 
     return result
 
@@ -262,13 +262,13 @@ def getUserStatsForGame( steamId, appId, language= 'english' ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'playerstats' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'playerstats' key." )
 
     return result
 
@@ -302,13 +302,13 @@ def getOwnedGames( steamId, filterApps= None ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response' key." )
 
     _update_image_urls( result[ 'games' ] )
 
@@ -346,13 +346,13 @@ def getRecentlyPlayedGames( steamId, count= None ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response' key." )
 
     _update_image_urls( result[ 'games' ] )
 
@@ -375,13 +375,13 @@ def isPlayingSharedGame( steamId, appId ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response' key." )
 
     return result
 
@@ -397,13 +397,13 @@ def getNumberOfCurrentPlayers( appId ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ][ 'player_count' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response.player_count' key." )
 
     return result
 
@@ -419,13 +419,13 @@ def getSteamLevel( steamId ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ][ 'player_level' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response.player_level' key." )
 
     return result
 
@@ -462,13 +462,13 @@ def getBadges( steamId ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     try:
         result = r.json()[ 'response' ]
 
     except KeyError:
-        raise SteamApiError
+        raise SteamApiError( "Missing 'response' key." )
 
     return result
 
@@ -651,14 +651,14 @@ def appDetails( appIds ):
     r = requests.get( url )
 
     if r.status_code != 200:
-        raise SteamApiError
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
 
     data = r.json()
 
         # check we if it was successful
     for appId, info in data.items():
         if info[ 'success' ] == False:
-            raise SteamApiError
+            raise SteamApiError( "Wasn't successful." )
 
 
         # fix pricing (for whatever reason, the values returned don't have a dot (for example 399 instead of 3.99)

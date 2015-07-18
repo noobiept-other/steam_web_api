@@ -3,13 +3,13 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import login as django_login
 
 from accounts.forms import PrivateMessageForm
 from accounts.models import PrivateMessage
 from accounts.decorators import must_be_staff, must_be_moderator
 
 from steam import utilities
+from steam.steam_api import SteamApiError
 
 
 def user_page( request, username, whatToShow= None ):
@@ -32,7 +32,16 @@ def user_page( request, username, whatToShow= None ):
     }
 
     if whatToShow == 'friends':
-        context[ 'friends' ] = user.get_friends()
+        try:
+            friends = user.get_friends()
+
+            # means the account is set to private
+        except SteamApiError:
+            utilities.set_message( request, 'Account is private!' )
+
+        else:
+            context[ 'friends' ] = friends
+
         context[ 'show_friends' ] = True
 
     elif whatToShow == 'games_owned':
