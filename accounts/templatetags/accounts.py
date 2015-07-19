@@ -8,6 +8,9 @@ register = template.Library()
 @register.filter
 def account_name( user ):
 
+    if not user:
+        return None
+
     if not user.is_active:
         accountType = 'disabled'
 

@@ -4,8 +4,8 @@ from django.conf.urls import url
 urlpatterns = [
 
     url( r'^logout$', 'django.contrib.auth.views.logout', name= 'logout' ),
-    url( r'^user/(?P<username>\d+)$', 'accounts.views.user_page', name= 'user_page' ),
-    url( r'^user/(?P<username>\d+)/(?P<whatToShow>\w+)$', 'accounts.views.user_page', name= 'user_page_specify' ),
+    url( r'^user/(?P<steamId>\d+)$', 'accounts.views.user_page', name= 'user_page' ),
+    url( r'^user/(?P<steamId>\d+)/(?P<whatToShow>\w+)$', 'accounts.views.user_page', name= 'user_page_specify' ),
 
         # Add/Remove Moderator Rights
     url( r'^set_moderator/confirm/(?P<username>\w+)$', 'accounts.views.set_moderator_confirm', name= 'set_moderator_confirm' ),

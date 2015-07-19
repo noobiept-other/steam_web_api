@@ -6,10 +6,10 @@
 {% block content %}
 
     <p><img src="{{ steamInfo.avatarfull }}" /></p>
-    <img src="{{ steamInfo.avatar }}" /> name: <a href="{{ steamInfo.profileurl }}" target="_blank">{{ steamInfo.personaname }}</a>
     <h2>
-        {{ pageUser|account_name }}
+        <img src="{{ steamInfo.avatar }}" /> {{ pageUser|account_name|default_if_none:steamInfo.personaname }}
 
+        {% if pageUser %}
         <ul class="horizontalList">
             {% if user.is_moderator or user.is_staff %}
             <li>
@@ -38,12 +38,13 @@
             </li>
             {% endif %}
         </ul>
+        {% endif %}
     </h2>
 
-    <p>Joined: {{ pageUser.date_joined }} ({{ pageUser.date_joined|naturaltime }})</p>
+    <p>Joined: {{ steamInfo.timecreated|convert_timestamp|default:"---" }}</p>
     <p>Last log off: {{ steamInfo.lastlogoff|convert_timestamp }}</p>
 
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and pageUser %}
         <ul>
         {% if user.username == pageUser.username %}
             <li>
@@ -54,7 +55,7 @@
                 </a>
             </li>
         {% else %}
-            <li><a href="{% url 'accounts:message_send' pageUser.username %}">Send private message</a></li>
+            <li><a href="{% url 'accounts:message_send' steamId %}">Send private message</a></li>
         {% endif %}
         </ul>
     {% endif %}
@@ -62,13 +63,13 @@
 
     <ul class="horizontalList">
         <li {% if show_games_played %}class="entrySelected" {% endif %}>
-            <a href="{% url 'accounts:user_page' pageUser.username %}">games played recently</a>
+            <a href="{% url 'accounts:user_page' steamId %}">games played recently</a>
         </li>
         <li {% if show_friends %}class="entrySelected" {% endif %}>
-            <a href="{% url 'accounts:user_page_specify' pageUser.username 'friends' %}">friends</a>
+            <a href="{% url 'accounts:user_page_specify' steamId 'friends' %}">friends</a>
         </li>
         <li {% if show_games_owned %}class="entrySelected" {% endif %}>
-            <a href="{% url 'accounts:user_page_specify' pageUser.username 'games_owned' %}">games owned</a>
+            <a href="{% url 'accounts:user_page_specify' steamId 'games_owned' %}">games owned</a>
         </li>
     </ul>
 
@@ -76,11 +77,15 @@
         {% if friends %}
             <table>
                 <tr>
+                    <th>Avatar</th>
                     <th>Name</th>
+                    <th>Last Log Off</th>
                 </tr>
                 {% for friend in friends %}
                 <tr>
-                    <td>{{ friend.personaname }}</td>
+                    <td><img src="{{ friend.avatar }}" /></td>
+                    <td><a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
+                    <td>{{ friend.lastlogoff|convert_timestamp }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -89,7 +94,7 @@
         {% endif %}
 
     {% elif show_games_played %}
-        {% if games_played %}
+        {% if games_played and games_played.total_count != 0 %}
             <table>
                 <tr>
                     <th>icon</th>
@@ -109,7 +114,7 @@
                 {% endfor %}
             </table>
         {% else %}
-            <p>No games played yet.</p>
+            <p>No games played in the last 2 weeks.</p>
         {% endif %}
 
     {% elif show_games_owned %}

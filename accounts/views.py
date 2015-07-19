@@ -9,48 +9,52 @@ from accounts.models import PrivateMessage
 from accounts.decorators import must_be_staff, must_be_moderator
 
 from steam import utilities
-from steam.steam_api import SteamApiError
+from steam import steam_api
 
 
-def user_page( request, username, whatToShow= None ):
+def user_page( request, steamId, whatToShow= None ):
     """
         The user page has information about an user account.
         Also where you can change some settings (like the password).
+
+        The steam account (specified by the steam id) may or not be registered in this website.
     """
     userModel = get_user_model()
-
-    try:
-        user = userModel.objects.get( username= username )
-
-    except userModel.DoesNotExist:
-        raise Http404( "User doesn't exist." )
-
     context = {
-        'pageUser': user,
-        'unreadMessages': user.how_many_unread_messages(),
-        'steamInfo': user.get_steam_extra_data()
+        'steamId': steamId
     }
 
-    if whatToShow == 'friends':
-        try:
-            friends = user.get_friends()
+    try:
+        user = userModel.objects.get( username= steamId )
 
-            # means the account is set to private
-        except SteamApiError:
-            utilities.set_message( request, 'Account is private!' )
-
-        else:
-            context[ 'friends' ] = friends
-
-        context[ 'show_friends' ] = True
-
-    elif whatToShow == 'games_owned':
-        context[ 'games_owned' ] = user.get_games_owned()
-        context[ 'show_games_owned' ] = True
+    except userModel.DoesNotExist:
+        context.update({
+            'steamInfo': steam_api.getPlayerSummaries( [ steamId ] )[ 0 ]
+        })
 
     else:
-        context[ 'games_played' ] = user.get_games_played()
-        context[ 'show_games_played' ] = True
+        context.update({
+            'pageUser': user,
+            'unreadMessages': user.how_many_unread_messages(),
+            'steamInfo': user.get_steam_extra_data()
+        })
+
+    try:
+        if whatToShow == 'friends':
+            context[ 'show_friends' ] = True
+            context[ 'friends' ] = steam_api.getFriendsSummaries( steamId )
+
+        elif whatToShow == 'games_owned':
+            context[ 'show_games_owned' ] = True
+            context[ 'games_owned' ] = steam_api.getOwnedGames( steamId )
+
+        else:
+            context[ 'show_games_played' ] = True
+            context[ 'games_played' ] = steam_api.getRecentlyPlayedGames( steamId )
+
+        # means the account is set to private
+    except steam_api.SteamApiError:
+        utilities.set_message( request, 'Account is private!' )
 
     utilities.get_message( request, context )
 

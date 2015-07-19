@@ -133,7 +133,7 @@ def getPlayerSummaries( steamIds ):
                 "avatarfull": str (url),
                 "personastate": int,
                 "primaryclanid": int,
-                "timecreated": int ,
+                "timecreated": int,
                 "personastateflags": int
             },
             (...)
@@ -354,7 +354,14 @@ def getRecentlyPlayedGames( steamId, count= None ):
     except KeyError:
         raise SteamApiError( "Missing 'response' key." )
 
-    _update_image_urls( result[ 'games' ] )
+    try:
+        games = result[ 'games' ]
+
+    except KeyError:
+        pass
+
+    else:
+        _update_image_urls( games )
 
     return result
 
@@ -675,3 +682,14 @@ def appDetails( appIds ):
 
 
     return data
+
+
+def getFriendsSummaries( steamId ):
+    """
+        Get a list with the friends account information.
+    """
+    friends = getFriendList( steamId )
+
+    friendsId = [ a[ 'steamid' ] for a in friends ]
+
+    return getPlayerSummaries( friendsId )
