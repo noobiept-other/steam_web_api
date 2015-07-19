@@ -81,6 +81,12 @@ footer
     padding: 5px;
     }
 
+.SortTable-sortable
+    {
+    color: rgb(0, 0, 255);
+    cursor: pointer;
+    }
+
 
     /* Accounts/User Page */
 

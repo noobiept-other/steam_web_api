@@ -2,6 +2,11 @@
 {% load humanize %}
 {% load accounts %}
 {% load steam_filters %}
+{% load static %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'accounts/sort_table.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 
@@ -75,19 +80,24 @@
 
     {% if show_friends %}
         {% if friends %}
-            <table>
-                <tr>
-                    <th>Avatar</th>
-                    <th>Name</th>
-                    <th>Last Log Off</th>
-                </tr>
+            <table class="SortTable">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th class="SortTable-sortable">Name</th>
+                        <th class="SortTable-sortable">Last Log Off</th>
+                    </tr>
+                </thead>
+
+                <tbody>
                 {% for friend in friends %}
                 <tr>
                     <td><img src="{{ friend.avatar }}" /></td>
-                    <td><a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
-                    <td>{{ friend.lastlogoff|convert_timestamp }}</td>
+                    <td data-value="{{ friend.personaname }}"><a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
+                    <td data-value="{{ friend.lastlogoff }}">{{ friend.lastlogoff|convert_timestamp }}</td>
                 </tr>
                 {% endfor %}
+                </tbody>
             </table>
         {% else %}
             <p>No friends yet.</p>
