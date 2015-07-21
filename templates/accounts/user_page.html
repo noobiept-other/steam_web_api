@@ -91,7 +91,7 @@
                 <tbody>
                 {% for friend in friends %}
                 <tr>
-                    <td data-value="{{ friend.personaname }}"><img src="{{ friend.avatar }}" /> <a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
+                    <td data-value="{{ friend.personaname.strip }}"><img src="{{ friend.avatar }}" /> <a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
                     <td data-value="{{ friend.lastlogoff }}">{{ friend.lastlogoff|convert_timestamp }}</td>
                 </tr>
                 {% endfor %}
@@ -116,7 +116,7 @@
                 <tbody>
                 {% for game in games_played.games %}
                 <tr>
-                    <td data-value="{{ game.name }}"><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a> {{ game.name }}</td>
+                    <td data-value="{{ game.name.strip }}"><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a> {{ game.name }}</td>
                     <td data-value="{{ game.playtime_2weeks }}">{{ game.playtime_2weeks|full_time }}</td>
                     <td data-value="{{ game.playtime_forever }}">{{ game.playtime_forever|full_time }}</td>
                     <td><img src="{{ game.img_logo_url }}" /></td>
@@ -143,7 +143,7 @@
                 <tbody>
                 {% for game in games_owned.games %}
                 <tr>
-                    <td data-value="{{ game.name }}"><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a> {{ game.name }}</td>
+                    <td data-value="{{ game.name.strip }}"><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a> {{ game.name }}</td>
                     <td data-value="{{ game.playtime_forever }}">{{ game.playtime_forever|full_time }}</td>
                 </tr>
                 {% endfor %}

@@ -25,26 +25,26 @@ def home( request, whatToShow= None ):
 
         howMany = 2
 
-        for aGame in apps[ 'games' ]:
-            gameName = aGame[ 'name' ]
-            gameIcon = aGame[ 'img_icon_url' ]
-            gameId = aGame[ 'appid' ]
+        if apps[ 'total_count' ] != 0:
 
-            gameNews = steam_api.getNewsForApp( gameId, howMany, 300 )
+            for aGame in apps[ 'games' ]:
+                gameName = aGame[ 'name' ]
+                gameIcon = aGame[ 'img_icon_url' ]
+                gameId = aGame[ 'appid' ]
 
-            for new in gameNews:
+                gameNews = steam_api.getNewsForApp( gameId, howMany, 300 )
 
-                new[ 'gameName' ] = gameName
-                new[ 'gameId' ] = gameId
-                new[ 'gameIcon' ] = gameIcon
-                news.append( new )
+                for new in gameNews:
 
+                    new[ 'gameName' ] = gameName
+                    new[ 'gameId' ] = gameId
+                    new[ 'gameIcon' ] = gameIcon
+                    news.append( new )
 
+            def sortNews( a ):
+                return a[ 'date' ]
 
-        def sortNews( a ):
-            return a[ 'date' ]
-
-        news.sort( key= sortNews, reverse= True )
+            news.sort( key= sortNews, reverse= True )
 
     context[ 'news' ] = news
 

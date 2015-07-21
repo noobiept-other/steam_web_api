@@ -57,6 +57,9 @@ if ( initialSortOrder )
         }
 
     addSortCharacter( header, descending );
+
+    var thead = header.parentElement.parentElement;
+    thead._CURRENT_HEADER = header;
     }
 
 
@@ -108,7 +111,6 @@ else
 }
 
 
-
 /**
  * Sort the table, based on a column's values.
  */
@@ -124,20 +126,23 @@ for (a = 0 ; a < rows.length ; a++)
     var row = rows[ a ];
     var dataValue = row.children[ position ].getAttribute( 'data-value' );
 
-        // see if its a number
-    var dataNumber = Number( dataValue );
 
-    if ( isNaN( dataNumber ) )
+    if ( dataValue !== '' )
         {
-            // its a string, lower the case for the sorting
-        dataValue = dataValue.toLowerCase();
-        }
+            // see if its a number
+        var dataNumber = Number( dataValue );
 
-    else
-        {
-        dataValue = dataNumber;
-        }
+        if ( isNaN( dataNumber ) )
+            {
+                // its a string, lower the case for the sorting
+            dataValue = dataValue.toLowerCase();
+            }
 
+        else
+            {
+            dataValue = dataNumber;
+            }
+        }
 
     data.push({
             row: row,

@@ -39,7 +39,7 @@
             <tbody>
             {% for stat in stats.stats %}
             <tr>
-                <td data-value="{{ stat.name }}">{{ stat.name }}</td>
+                <td data-value="{{ stat.name.strip }}">{{ stat.name }}</td>
                 <td data-value="{{ stat.value }}">{{ stat.value }}</td>
             </tr>
             {% endfor %}
@@ -147,14 +147,14 @@
             <thead>
                 <tr>
                     <th class="SortTable-sortable">name</th>
-                    <th class="SortTable-sortable">percent</th>
+                    <th class="SortTable-sortable" data-initial-sort="descending">percent</th>
                 </tr>
             </thead>
 
             <tbody>
             {% for achievement in global_achievements %}
             <tr>
-                <td data-value="{{ achievement.name }}">{{ achievement.name }}</td>
+                <td data-value="{{ achievement.name.strip }}">{{ achievement.name }}</td>
                 <td data-value="{{ achievement.percent }}">{{ achievement.percent|floatformat:"2" }}</td>
             </tr>
             {% endfor %}
@@ -172,16 +172,16 @@
                     <th class="SortTable-sortable">title</th>
                     <th>content</th>
                     <th class="SortTable-sortable">author</th>
-                    <th class="SortTable-sortable">date</th>
+                    <th class="SortTable-sortable" data-initial-sort="descending">date</th>
                 </tr>
             </thead>
 
             <tbody>
             {% for new in news %}
             <tr>
-                <td data-value="{{ new.title }}"><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
+                <td data-value="{{ new.title.strip }}"><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
                 <td>{{ new.contents|safe }}</td>
-                <td data-value="{{ new.author }}">{{ new.author }}</td>
+                <td data-value="{{ new.author.strip }}">{{ new.author }}</td>
                 <td data-value="{{ new.date }}">{{ new.date|convert_timestamp }}</td>
             </tr>
             {% endfor %}

@@ -87,6 +87,11 @@ footer
     cursor: pointer;
     }
 
+.SortTable-sortable:hover
+    {
+    text-decoration: underline;
+    }
+
 
     /* Accounts/User Page */
 

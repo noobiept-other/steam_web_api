@@ -61,6 +61,8 @@ class Account( AbstractUser ):
     def get_games_owned(self):
         return steam_api.getOwnedGames( self.username )
 
+    def __str__(self):
+        return self.get_persona_name()
 
 
 class PrivateMessage( models.Model ):

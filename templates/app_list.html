@@ -11,14 +11,14 @@
     <thead>
         <tr>
             <th class="SortTable-sortable">name</th>
-            <th class="SortTable-sortable">id</th>
+            <th class="SortTable-sortable" data-initial-sort="ascending">id</th>
         </tr>
     </thead>
 
     <tbody>
     {% for app in apps %}
     <tr>
-        <td data-value="{{ app.name }}"><a href="{% url 'game' app.appid %}" target="_blank">{{ app.name }}</a></td>
+        <td data-value="{{ app.name.strip }}"><a href="{% url 'game' app.appid %}" target="_blank">{{ app.name }}</a></td>
         <td data-value="{{ app.appid }}">{{ app.appid }}</td>
     </tr>
     {% endfor %}
