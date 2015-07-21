@@ -120,11 +120,21 @@ data.sort( function( a, b )
     });
 
 
+
+var parent = tbody.parentNode;
+var next = tbody.nextSibling;
+
+    // remove the 'tbody' element from the tree, before making the changes
+parent.removeChild( tbody );
+
     // re-add the rows to the table
 for (a = 0 ; a < data.length ; a++)
     {
     tbody.appendChild( data[ a ].row );
     }
+
+    // re-add the 'tbody' element to the tree
+parent.insertBefore( tbody, next );
 }
 
 
