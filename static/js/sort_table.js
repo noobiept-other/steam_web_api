@@ -8,6 +8,7 @@ var SortTable;
  *
  * - The <table> elements need to have the css class `SortTable`.
  * - The <th> (table header) elements of the columns that are sortable, need to have the class `SortTable-sortable`.
+ * - There can be one of the <th> elements with an attribute `data-initial-sort` set to either `ascending` or `descending`, to represent the initial state of the table.
  * - The <td> (table data) elements of the sortable columns, need to have a `data-value` attribute.
  */
 SortTable.init = function()
@@ -30,7 +31,7 @@ for (var a = tables.length - 1 ; a >= 0 ; a--)
 
         if ( header.classList.contains( 'SortTable-sortable' ) )
             {
-            header.addEventListener( 'click', getHeaderClickListener( b ) );
+            header.addEventListener( 'click', getHeaderClickListener( header, b ) );
             }
         }
     }
@@ -40,19 +41,72 @@ for (var a = tables.length - 1 ; a >= 0 ; a--)
 /**
  * Returns the click listener that will trigger the sorting of the table.
  */
-function getHeaderClickListener( position )
+function getHeaderClickListener( header, position )
 {
 var descending = true;
+var initialSortOrder = header.getAttribute( 'data-initial-sort' );
+
+    // the table can come already sorted in some way
+    // in that case, add the corresponding arrow character
+if ( initialSortOrder )
+    {
+        // ascending order
+    if ( initialSortOrder.charAt( 0 ) === 'a' )
+        {
+        descending = false;
+        }
+
+    addSortCharacter( header, descending );
+    }
+
 
 return function( event )
     {
-    var th = event.target;
-    var tbody = th.parentElement.parentElement.nextElementSibling;
+    var thead = header.parentElement.parentElement;
+    var tbody = thead.nextElementSibling;
+    var previousHeader = thead._CURRENT_HEADER;
+
+        // when sorting a different column, need to remove the arrow character from the previous column
+    if ( previousHeader && previousHeader !== header )
+        {
+        previousHeader.removeChild( previousHeader.lastChild );
+        }
+
+    thead._CURRENT_HEADER = header;
     descending = !descending;
 
+    addSortCharacter( header, descending );
     sortTable( tbody, position, descending );
     };
 }
+
+
+/**
+ * Add an arrow character (▼ or ▲) that represents the current sort order, to a table header element.
+ */
+function addSortCharacter( element, descending )
+{
+    // check if there's a span element already there (after the header text)
+    // otherwise we need to create it
+var last = element.lastChild;
+
+if ( last.nodeType !== 1 )
+    {
+    last = document.createElement( 'span' );
+    element.appendChild( last );
+    }
+
+if ( descending )
+    {
+    last.innerHTML = '▼';
+    }
+
+else
+    {
+    last.innerHTML = '▲';
+    }
+}
+
 
 
 /**
