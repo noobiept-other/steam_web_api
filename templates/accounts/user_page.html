@@ -5,7 +5,7 @@
 {% load static %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{% static 'accounts/sort_table.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -83,7 +83,6 @@
             <table class="SortTable">
                 <thead>
                     <tr>
-                        <th>Avatar</th>
                         <th class="SortTable-sortable">Name</th>
                         <th class="SortTable-sortable">Last Log Off</th>
                     </tr>
@@ -92,8 +91,7 @@
                 <tbody>
                 {% for friend in friends %}
                 <tr>
-                    <td><img src="{{ friend.avatar }}" /></td>
-                    <td data-value="{{ friend.personaname }}"><a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
+                    <td data-value="{{ friend.personaname }}"><img src="{{ friend.avatar }}" /> <a href="{% url 'accounts:user_page' friend.steamid %}">{{ friend.personaname }}</a></td>
                     <td data-value="{{ friend.lastlogoff }}">{{ friend.lastlogoff|convert_timestamp }}</td>
                 </tr>
                 {% endfor %}
@@ -105,23 +103,26 @@
 
     {% elif show_games_played %}
         {% if games_played and games_played.total_count != 0 %}
-            <table>
-                <tr>
-                    <th>icon</th>
-                    <th>name</th>
-                    <th>playtime last 2 weeks</th>
-                    <th>playtime on record</th>
-                    <th>logo</th>
-                </tr>
+            <table class="SortTable">
+                <thead>
+                    <tr>
+                        <th class="SortTable-sortable">name</th>
+                        <th class="SortTable-sortable">playtime last 2 weeks</th>
+                        <th class="SortTable-sortable">playtime on record</th>
+                        <th>logo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
                 {% for game in games_played.games %}
                 <tr>
-                    <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
-                    <td>{{ game.name }}</td>
-                    <td>{{ game.playtime_2weeks|full_time }}</td>
-                    <td>{{ game.playtime_forever|full_time }}</td>
+                    <td data-value="{{ game.name }}"><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a> {{ game.name }}</td>
+                    <td data-value="{{ game.playtime_2weeks }}">{{ game.playtime_2weeks|full_time }}</td>
+                    <td data-value="{{ game.playtime_forever }}">{{ game.playtime_forever|full_time }}</td>
                     <td><img src="{{ game.img_logo_url }}" /></td>
                 </tr>
                 {% endfor %}
+                </tbody>
             </table>
         {% else %}
             <p>No games played in the last 2 weeks.</p>
@@ -131,19 +132,22 @@
         {% if games_owned %}
             <p>Game count: {{ games_owned.game_count }}</p>
 
-            <table>
-                <tr>
-                    <th>icon</th>
-                    <th>name</th>
-                    <th>playtime</th>
-                </tr>
+            <table class="SortTable">
+                <thead>
+                    <tr>
+                        <th class="SortTable-sortable">name</th>
+                        <th class="SortTable-sortable">playtime</th>
+                    </tr>
+                </thead>
+
+                <tbody>
                 {% for game in games_owned.games %}
                 <tr>
-                    <td><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a></td>
-                    <td>{{ game.name }}</td>
-                    <td>{{ game.playtime_forever|full_time }}</td>
+                    <td data-value="{{ game.name }}"><a href="{% url 'game' game.appid %}" target="_blank"><img src="{{ game.img_icon_url }}" title="{{ game.name }}" /></a> {{ game.name }}</td>
+                    <td data-value="{{ game.playtime_forever }}">{{ game.playtime_forever|full_time }}</td>
                 </tr>
                 {% endfor %}
+                </tbody>
             </table>
         {% else %}
             <p>No games owned yet.</p>

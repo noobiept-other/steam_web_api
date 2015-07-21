@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% load steam_filters %}
+{% load static %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 
@@ -23,17 +28,22 @@
     <h2>Statistics</h2>
 
     {% if stats.stats %}
-        <table>
-            <tr>
-                <th>name</th>
-                <th>value</th>
-            </tr>
+        <table class="SortTable">
+            <thead>
+                <tr>
+                    <th class="SortTable-sortable">name</th>
+                    <th class="SortTable-sortable">value</th>
+                </tr>
+            </thead>
+
+            <tbody>
             {% for stat in stats.stats %}
             <tr>
-                <td>{{ stat.name }}</td>
-                <td>{{ stat.value }}</td>
+                <td data-value="{{ stat.name }}">{{ stat.name }}</td>
+                <td data-value="{{ stat.value }}">{{ stat.value }}</td>
             </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p>No stats yet.</p>
@@ -133,17 +143,22 @@
 
 {% elif show_global_achievements %}
     {% if global_achievements %}
-        <table>
-            <tr>
-                <th>name</th>
-                <th>percent</th>
-            </tr>
+        <table class="SortTable">
+            <thead>
+                <tr>
+                    <th class="SortTable-sortable">name</th>
+                    <th class="SortTable-sortable">percent</th>
+                </tr>
+            </thead>
+
+            <tbody>
             {% for achievement in global_achievements %}
             <tr>
-                <td>{{ achievement.name }}</td>
-                <td>{{ achievement.percent|floatformat:"2" }}</td>
+                <td data-value="{{ achievement.name }}">{{ achievement.name }}</td>
+                <td data-value="{{ achievement.percent }}">{{ achievement.percent|floatformat:"2" }}</td>
             </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p>No global achievements yet.</p>
@@ -151,21 +166,26 @@
 
 {% elif show_news %}
     {% if news %}
-        <table>
-            <tr>
-                <th>title</th>
-                <th>content</th>
-                <th>author</th>
-                <th>date</th>
-            </tr>
+        <table class="SortTable">
+            <thead>
+                <tr>
+                    <th class="SortTable-sortable">title</th>
+                    <th>content</th>
+                    <th class="SortTable-sortable">author</th>
+                    <th class="SortTable-sortable">date</th>
+                </tr>
+            </thead>
+
+            <tbody>
             {% for new in news %}
             <tr>
-                <td><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
+                <td data-value="{{ new.title }}"><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
                 <td>{{ new.contents|safe }}</td>
-                <td>{{ new.author }}</td>
-                <td>{{ new.date|convert_timestamp }}</td>
+                <td data-value="{{ new.author }}">{{ new.author }}</td>
+                <td data-value="{{ new.date }}">{{ new.date|convert_timestamp }}</td>
             </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p>No news.</p>

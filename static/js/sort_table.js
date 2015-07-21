@@ -12,39 +12,47 @@ var SortTable;
  */
 SortTable.init = function()
 {
-var table = document.querySelector( '.SortTable' );
+var tables = document.getElementsByClassName( 'SortTable' );
 
-if ( !table )
+if ( tables.length === 0 )
     {
     return;
     }
 
-var headers = table.querySelectorAll( 'th' );
 
-var click_f = function( position )
+for (var a = tables.length - 1 ; a >= 0 ; a--)
     {
-    var descending = true;
+    var headers = tables[ a ].getElementsByTagName( 'th' );
 
-    return function( event )
+    for (var b = headers.length - 1 ; b >= 0 ; b--)
         {
-        var th = event.target;
-        var tbody = th.parentElement.parentElement.nextElementSibling;
-        descending = !descending;
+        var header = headers[ b ];
 
-        sortTable( tbody, position, descending );
-        };
-    };
-
-for (var a = headers.length - 1 ; a >= 0 ; a--)
-    {
-    var header = headers[ a ];
-
-    if ( header.classList.contains( 'SortTable-sortable' ) )
-        {
-        header.addEventListener( 'click', click_f( a ) );
+        if ( header.classList.contains( 'SortTable-sortable' ) )
+            {
+            header.addEventListener( 'click', getHeaderClickListener( b ) );
+            }
         }
     }
 };
+
+
+/**
+ * Returns the click listener that will trigger the sorting of the table.
+ */
+function getHeaderClickListener( position )
+{
+var descending = true;
+
+return function( event )
+    {
+    var th = event.target;
+    var tbody = th.parentElement.parentElement.nextElementSibling;
+    descending = !descending;
+
+    sortTable( tbody, position, descending );
+    };
+}
 
 
 /**
@@ -62,10 +70,20 @@ for (a = 0 ; a < rows.length ; a++)
     var row = rows[ a ];
     var dataValue = row.children[ position ].getAttribute( 'data-value' );
 
-    if ( typeof dataValue === 'string' )
+        // see if its a number
+    var dataNumber = Number( dataValue );
+
+    if ( isNaN( dataNumber ) )
         {
-        dataValue.toLowerCase();
+            // its a string, lower the case for the sorting
+        dataValue = dataValue.toLowerCase();
         }
+
+    else
+        {
+        dataValue = dataNumber;
+        }
+
 
     data.push({
             row: row,

@@ -1,18 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 
-<table>
-    <tr>
-        <th>name</th>
-        <th>id</th>
-    </tr>
+<table class="SortTable">
+    <thead>
+        <tr>
+            <th class="SortTable-sortable">name</th>
+            <th class="SortTable-sortable">id</th>
+        </tr>
+    </thead>
+
+    <tbody>
     {% for app in apps %}
     <tr>
-        <td><a href="{% url 'game' app.appid %}" target="_blank">{{ app.name }}</a></td>
-        <td>{{ app.appid }}</td>
+        <td data-value="{{ app.name }}"><a href="{% url 'game' app.appid %}" target="_blank">{{ app.name }}</a></td>
+        <td data-value="{{ app.appid }}">{{ app.appid }}</td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 
 

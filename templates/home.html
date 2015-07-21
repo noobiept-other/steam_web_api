@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 {% load steam_filters %}
+{% load static %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js/sort_table.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 
-<p>News List</p>
+<h2>News List</h2>
 
 
 <ul class="horizontalList">
@@ -17,23 +22,28 @@
 
 
 {% if news %}
-    <table>
-        <tr>
-            <th>game</th>
-            <th>title</th>
-            <th>content</th>
-            <th>author</th>
-            <th>date</th>
-        </tr>
+    <table class="SortTable">
+        <thead>
+            <tr>
+                <th class="SortTable-sortable">game</th>
+                <th class="SortTable-sortable">title</th>
+                <th>content</th>
+                <th class="SortTable-sortable">author</th>
+                <th class="SortTable-sortable">date</th>
+            </tr>
+        </thead>
+
+        <tbody>
         {% for new in news %}
         <tr>
-            <td><a href="{% url 'game' new.gameId %}" target="_blank"><img class="gameIcon" src="{{ new.gameIcon }}" title="{{ new.gameName }}" /></a></td>
-            <td><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
+            <td data-value="{{ new.gameName }}"><a href="{% url 'game' new.gameId %}" target="_blank"><img class="gameIcon" src="{{ new.gameIcon }}" title="{{ new.gameName }}" /></a></td>
+            <td data-value="{{ new.title }}"><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
             <td>{{ new.contents|safe }}</td>
-            <td>{{ new.author }}</td>
-            <td>{{ new.date|convert_timestamp }}</td>
+            <td data-value="{{ new.author }}">{{ new.author }}</td>
+            <td data-value="{{ new.date }}">{{ new.date|convert_timestamp }}</td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
 {% else %}
     <p>No news.</p>
