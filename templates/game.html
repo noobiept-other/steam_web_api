@@ -23,46 +23,51 @@
     </li>
 </ul>
 
-{% if show_stats and stats %}
-    <h1>{{ stats.gameName }}</h1>
-    <h2>Statistics</h2>
+{% if show_stats %}
 
-    {% if stats.stats %}
-        <table class="SortTable">
-            <thead>
+    {% if stats %}
+        <h2>Statistics</h2>
+
+        {% if stats.stats %}
+            <table class="SortTable">
+                <thead>
+                    <tr>
+                        <th class="SortTable-sortable">name</th>
+                        <th class="SortTable-sortable">value</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for stat in stats.stats %}
                 <tr>
-                    <th class="SortTable-sortable">name</th>
-                    <th class="SortTable-sortable">value</th>
+                    <td data-value="{{ stat.name.strip }}">{{ stat.name }}</td>
+                    <td data-value="{{ stat.value }}">{{ stat.value }}</td>
                 </tr>
-            </thead>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No stats yet.</p>
+        {% endif %}
 
-            <tbody>
-            {% for stat in stats.stats %}
-            <tr>
-                <td data-value="{{ stat.name.strip }}">{{ stat.name }}</td>
-                <td data-value="{{ stat.value }}">{{ stat.value }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <h2>Achievements</h2>
+
+        {% if stats.achievements %}
+            <ul>
+                {% for achievement in stats.achievements %}
+                    {% if achievement.achieved != 0 %}
+                        <li>{{ achievement.name }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+        {% else %}
+            <p>No achievements yet.</p>
+        {% endif %}
     {% else %}
-        <p>No stats yet.</p>
+        <p>No statistics yet.</p>
     {% endif %}
 
-    <h2>Achievements</h2>
-
-    {% if stats.achievements %}
-        <ul>
-            {% for achievement in stats.achievements %}
-                {% if achievement.achieved != 0 %}
-                    <li>{{ achievement.name }}</li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-
-    {% else %}
-        <p>No achievements yet.</p>
-    {% endif %}
 
 {% elif show_game_info %}
     {% if game_info %}

@@ -83,53 +83,39 @@ def game( request, appId, whatToShow= None ):
             if request.user.is_authenticated():
 
                 steamId = request.user.username
-                context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
                 context[ 'show_stats' ] = True
+                context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
 
             else:
                 return HttpResponseRedirect( settings.LOGIN_URL + '?next=' + reverse( 'game_specify', args= [ appId, whatToShow ] ) )
 
         elif whatToShow == 'global_achievements':
-            context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
             context[ 'show_global_achievements' ] = True
+            context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
 
         elif whatToShow == 'news':
-            context[ 'news' ] = steam_api.getNewsForApp( appId, 10, 500 )
             context[ 'show_news' ] = True
+            context[ 'news' ] = steam_api.getNewsForApp( appId, 10, 500 )
 
         else:
+            context[ 'show_game_info' ] = True
             context[ 'game_info' ] = steam_api.appDetails( [ appId ] )[ str( appId ) ][ 'data' ]
             context[ 'current_players' ] = steam_api.getNumberOfCurrentPlayers( appId )
-            context[ 'show_game_info' ] = True
 
 
     except steam_api.SteamApiError:
+        utilities.set_message( request, 'No statistics available.' )
 
-        values = {
-            'url': request.path_info,
-            'reason': "Failed to get the information from steam."
-        }
-        url = '{}?{}'.format( reverse( 'steam_api_failed' ), urlencode( values ) )
 
-        return HttpResponseRedirect( url )
-
+    utilities.get_message( request, context )
     return render( request, 'game.html', context )
-
-
-
-def steam_api_failed( request ):
-
-    context = {
-        'url': request.GET[ 'url' ],
-        'reason': request.GET[ 'reason' ]
-    }
-
-    return render( request, 'steam_api_failed.html', context )
-
 
 
 def find_by_id( request ):
     """
         Specify a steam id, to show that account information page.
     """
-    return render( request, 'find_by_id.html' )
+    context = {}
+    utilities.get_message( request, context )
+
+    return render( request, 'find_by_id.html', context )

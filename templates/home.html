@@ -11,42 +11,48 @@
 <h2>News List</h2>
 
 
-<ul class="horizontalList">
-    <li {% if show_recently_played %}class="entrySelected"{% endif %}>
-        <a href="{% url 'home' %}">Recently Played</a>
-    </li>
-    <li {% if show_owned_apps %}class="entrySelected"{% endif %}>
-        <a href="{% url 'home_specify' 'owned' %}">Owned</a>
-    </li>
-</ul>
+{% if request.user.is_authenticated %}
+
+    <ul class="horizontalList">
+        <li {% if show_recently_played %}class="entrySelected"{% endif %}>
+            <a href="{% url 'home' %}">Recently Played</a>
+        </li>
+        <li {% if show_owned_apps %}class="entrySelected"{% endif %}>
+            <a href="{% url 'home_specify' 'owned' %}">Owned</a>
+        </li>
+    </ul>
 
 
-{% if news %}
-    <table class="SortTable">
-        <thead>
+    {% if news %}
+        <table class="SortTable">
+            <thead>
+                <tr>
+                    <th class="SortTable-sortable">game</th>
+                    <th class="SortTable-sortable">title</th>
+                    <th>content</th>
+                    <th class="SortTable-sortable">author</th>
+                    <th class="SortTable-sortable" data-initial-sort="descending">date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for new in news %}
             <tr>
-                <th class="SortTable-sortable">game</th>
-                <th class="SortTable-sortable">title</th>
-                <th>content</th>
-                <th class="SortTable-sortable">author</th>
-                <th class="SortTable-sortable" data-initial-sort="descending">date</th>
+                <td data-value="{{ new.gameName.strip }}"><a href="{% url 'game' new.gameId %}" target="_blank"><img class="gameIcon" src="{{ new.gameIcon }}" title="{{ new.gameName }}" /></a></td>
+                <td data-value="{{ new.title.strip }}"><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
+                <td>{{ new.contents|safe }}</td>
+                <td data-value="{{ new.author.strip }}">{{ new.author }}</td>
+                <td data-value="{{ new.date }}">{{ new.date|convert_timestamp }}</td>
             </tr>
-        </thead>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No news.</p>
+    {% endif %}
 
-        <tbody>
-        {% for new in news %}
-        <tr>
-            <td data-value="{{ new.gameName.strip }}"><a href="{% url 'game' new.gameId %}" target="_blank"><img class="gameIcon" src="{{ new.gameIcon }}" title="{{ new.gameName }}" /></a></td>
-            <td data-value="{{ new.title.strip }}"><a href="{{ new.url }}" target="_blank">{{ new.title }}</a></td>
-            <td>{{ new.contents|safe }}</td>
-            <td data-value="{{ new.author.strip }}">{{ new.author }}</td>
-            <td data-value="{{ new.date }}">{{ new.date|convert_timestamp }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 {% else %}
-    <p>No news.</p>
+    <p>Need to login to get the news list.</p>
 {% endif %}
 
 {% endblock %}

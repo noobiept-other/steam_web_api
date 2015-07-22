@@ -36,7 +36,14 @@ def user_page( request, steamId= None, whatToShow= None ):
         playerSummaries = steam_api.getPlayerSummaries( [ steamId ] )
 
         if len( playerSummaries ) == 0:
-            raise Http404( "Account not found." )
+            previous = request.GET.get( 'previous' )
+
+            if previous:
+                utilities.set_message( request, 'Account not found.' )
+                return HttpResponseRedirect( previous )
+
+            else:
+                raise Http404( "Account not found." )
 
         context.update({
             'steamInfo': playerSummaries[ 0 ]

@@ -15,8 +15,6 @@ urlpatterns = [
     url( r'^game/(?P<appId>\d+)$', 'steam.views.game', name= 'game' ),
     url( r'^game/(?P<appId>\d+)/(?P<whatToShow>\w+)$', 'steam.views.game', name= 'game_specify' ),
 
-    url( r'^steam_api_failed$', 'steam.views.steam_api_failed', name= 'steam_api_failed' ),
-
 
     url( '', include( 'social.apps.django_app.urls', namespace= 'social' ) ),
     url( r'^accounts/', include( 'accounts.urls', namespace= 'accounts', app_name= 'accounts' ) ),
