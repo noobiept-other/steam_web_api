@@ -9,6 +9,7 @@
 
         LIVE -- To know its in the live server.
         SECRET_KEY -- The secret key to be used.
+        STEAM_API_KEY -- The key needed to use the steam web api.
 """
 
 from django.core.urlresolvers import reverse_lazy
@@ -39,8 +40,12 @@ else:
     SECRET_KEY = os.environ[ 'SECRET_KEY' ]
 
 
-with open( os.path.join( BASE_DIR, 'steam/steam_api_key.txt' ), 'r', encoding= 'utf-8' ) as f:
-    STEAM_API_KEY = f.read()
+if DEBUG:
+    with open( os.path.join( BASE_DIR, 'steam/steam_api_key.txt' ), 'r', encoding= 'utf-8' ) as f:
+        STEAM_API_KEY = f.read()
+
+else:
+    STEAM_API_KEY = os.environ[ 'STEAM_API_KEY' ]
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
