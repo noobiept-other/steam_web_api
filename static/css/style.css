@@ -1,5 +1,10 @@
     /* Basic Elements */
 
+body
+    {
+    font-size: 24px;
+    }
+
 em
     {
     font-weight: bold;
@@ -9,6 +14,21 @@ em
 footer
     {
     margin-top: 50px;
+    }
+
+table
+    {
+    margin: 15px;
+    }
+
+thead
+    {
+    background-color: rgba(40, 20, 220, 0.15);
+    }
+
+tbody tr:nth-child(even)
+    {
+    background-color: rgba(129, 136, 166, 0.1);
     }
 
 
@@ -32,7 +52,7 @@ footer
     {
     list-style-type: none;
     display: inline-block;
-    margin: 0;
+    margin: 15px;
     padding: 0;
     }
 
@@ -90,6 +110,11 @@ footer
 .SortTable-sortable:hover
     {
     text-decoration: underline;
+    }
+
+.entrySelected
+    {
+    background-color: rgba(138, 43, 226, 0.2);
     }
 
 

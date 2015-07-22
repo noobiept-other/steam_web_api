@@ -12,7 +12,7 @@ from steam import utilities
 from steam import steam_api
 
 
-def user_page( request, steamId, whatToShow= None ):
+def user_page( request, steamId= None, whatToShow= None ):
     """
         The user page has information about an user account.
         Also where you can change some settings (like the password).
@@ -20,6 +20,11 @@ def user_page( request, steamId, whatToShow= None ):
         The steam account (specified by the steam id) may or not be registered in this website.
     """
     userModel = get_user_model()
+
+    if not steamId:
+        steamId = request.GET.get( 'steamid' )
+
+    steamId = int( steamId )
     context = {
         'steamId': steamId
     }
@@ -28,8 +33,13 @@ def user_page( request, steamId, whatToShow= None ):
         user = userModel.objects.get( username= steamId )
 
     except userModel.DoesNotExist:
+        playerSummaries = steam_api.getPlayerSummaries( [ steamId ] )
+
+        if len( playerSummaries ) == 0:
+            raise Http404( "Account not found." )
+
         context.update({
-            'steamInfo': steam_api.getPlayerSummaries( [ steamId ] )[ 0 ]
+            'steamInfo': playerSummaries[ 0 ]
         })
 
     else:

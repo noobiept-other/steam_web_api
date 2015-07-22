@@ -11,6 +11,7 @@ urlpatterns = [
     url( r'^$', 'steam.views.home', name= 'home' ),
     url( r'^home/(?P<whatToShow>\w+)$', 'steam.views.home', name= 'home_specify' ),
     url( r'^app_list$', 'steam.views.app_list', name= 'app_list' ),
+    url( r'^find_by_id$', 'steam.views.find_by_id', name= 'find_by_id' ),
     url( r'^game/(?P<appId>\d+)$', 'steam.views.game', name= 'game' ),
     url( r'^game/(?P<appId>\d+)/(?P<whatToShow>\w+)$', 'steam.views.game', name= 'game_specify' ),
 

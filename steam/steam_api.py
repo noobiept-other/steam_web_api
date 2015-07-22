@@ -310,7 +310,14 @@ def getOwnedGames( steamId, filterApps= None ):
     except KeyError:
         raise SteamApiError( "Missing 'response' key." )
 
-    _update_image_urls( result[ 'games' ] )
+    try:
+        games = result[ 'games' ]
+
+    except KeyError:
+        pass
+
+    else:
+        _update_image_urls( games )
 
     return result
 

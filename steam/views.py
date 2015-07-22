@@ -4,8 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.utils.http import urlencode
+from django.conf import settings
 
 from steam import steam_api, utilities
+
 
 def home( request, whatToShow= None ):
 
@@ -17,15 +19,17 @@ def home( request, whatToShow= None ):
 
         if whatToShow == 'owned':
             apps = user.get_games_owned()
+            count = apps[ 'game_count' ]
             context[ 'show_owned_apps' ] = True
 
         else:
             apps = user.get_games_played()
+            count = apps[ 'total_count' ]
             context[ 'show_recently_played' ] = True
 
         howMany = 2
 
-        if apps[ 'total_count' ] != 0:
+        if count != 0:
 
             for aGame in apps[ 'games' ]:
                 gameName = aGame[ 'name' ]
@@ -67,19 +71,23 @@ def app_list( request ):
 
 
 
-
-@login_required
 def game( request, appId, whatToShow= None ):
 
-    steamId = request.user.username
     context = {
         'appId': appId
     }
 
     try:
         if whatToShow == 'stats':
-            context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
-            context[ 'show_stats' ] = True
+
+            if request.user.is_authenticated():
+
+                steamId = request.user.username
+                context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
+                context[ 'show_stats' ] = True
+
+            else:
+                return HttpResponseRedirect( settings.LOGIN_URL + '?next=' + reverse( 'game_specify', args= [ appId, whatToShow ] ) )
 
         elif whatToShow == 'global_achievements':
             context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
@@ -117,3 +125,11 @@ def steam_api_failed( request ):
     }
 
     return render( request, 'steam_api_failed.html', context )
+
+
+
+def find_by_id( request ):
+    """
+        Specify a steam id, to show that account information page.
+    """
+    return render( request, 'find_by_id.html' )

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Find an account by id</h2>
+
+<form method="GET" action="{% url 'accounts:user_page' %}">
+    <table>
+        <tr>
+            <td>Steam id:</td>
+            <td><input name="steamid" type="number" /></td>
+        </tr>
+    </table>
+
+    <input type="submit" value="Find" />
+</form>
+
+{% endblock %}

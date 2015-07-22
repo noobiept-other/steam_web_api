@@ -4,6 +4,7 @@ from django.conf.urls import url
 urlpatterns = [
 
     url( r'^logout$', 'django.contrib.auth.views.logout', name= 'logout' ),
+    url( r'^user$', 'accounts.views.user_page', name= 'user_page' ),
     url( r'^user/(?P<steamId>\d+)$', 'accounts.views.user_page', name= 'user_page' ),
     url( r'^user/(?P<steamId>\d+)/(?P<whatToShow>\w+)$', 'accounts.views.user_page', name= 'user_page_specify' ),
 

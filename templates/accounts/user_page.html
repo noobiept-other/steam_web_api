@@ -129,7 +129,7 @@
         {% endif %}
 
     {% elif show_games_owned %}
-        {% if games_owned %}
+        {% if games_owned and games_owned.game_count != 0 %}
             <p>Game count: {{ games_owned.game_count }}</p>
 
             <table class="SortTable">
