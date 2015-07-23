@@ -86,12 +86,19 @@ def game( request, appId, whatToShow= None ):
                 context[ 'show_stats' ] = True
                 context[ 'stats' ] = steam_api.getUserStatsForGame( steamId, appId )
 
+                achievements = context[ 'stats' ].get( 'achievements' )
+
+                if achievements:
+                    _update_achievements( appId, achievements )
+
             else:
                 return HttpResponseRedirect( settings.LOGIN_URL + '?next=' + reverse( 'game_specify', args= [ appId, whatToShow ] ) )
 
         elif whatToShow == 'global_achievements':
             context[ 'show_global_achievements' ] = True
             context[ 'global_achievements' ] = steam_api.getGlobalAchievementPercentagesForApp( appId )
+
+            _update_achievements( appId, context[ 'global_achievements' ] )
 
         elif whatToShow == 'news':
             context[ 'show_news' ] = True
@@ -119,3 +126,32 @@ def find_by_id( request ):
     utilities.get_message( request, context )
 
     return render( request, 'find_by_id.html', context )
+
+
+def _update_achievements( appId, achievements ):
+    """
+        Update the achievements information (with the game's schema information).
+    """
+    gameSchema = steam_api.getSchemaForGame( appId )
+    schemaAchievements = {}
+
+    availableStats = gameSchema.get( 'availableGameStats' )
+    if not availableStats:
+        return
+
+    availableAchievements = availableStats.get( 'achievements' )
+    if not availableAchievements:
+        return
+
+    for achievement in availableAchievements:
+        schemaAchievements[ achievement[ 'name' ] ] = achievement
+
+    for achievement in achievements:
+        try:
+            schemaInfo = schemaAchievements[ achievement[ 'name' ] ]
+
+        except KeyError:
+            pass
+
+        else:
+            achievement.update( schemaInfo )

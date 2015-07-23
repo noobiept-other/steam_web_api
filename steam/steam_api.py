@@ -700,3 +700,54 @@ def getFriendsSummaries( steamId ):
     friendsId = [ a[ 'steamid' ] for a in friends ]
 
     return getPlayerSummaries( friendsId )
+
+
+def getSchemaForGame( appId ):
+    """
+        @param appId The id of the game/application.
+        @return
+            {
+                "game": {
+                    "gameName": str,
+                    "gameVersion": str,
+                    "availableGameStats": {
+                        "achievements": [
+                            {
+                                "name": str,
+                                "defaultvalue": int,
+                                "displayName": str,
+                                "hidden": number,
+                                "description": str,
+                                "icon": str (url),
+                                "icongray": str (url)
+                            },
+                            # (...)
+                        ],
+                        "stats": [
+                            {
+                                "name": str,
+                                "defaultvalue": int,
+                                "displayName": str
+                            },
+                            # (...)
+                        ]
+                    }
+                }
+            }
+    """
+
+
+    url = 'http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key={}&appid={}&format=json'.format( settings.STEAM_API_KEY, appId )
+
+    r = requests.get( url )
+
+    if r.status_code != 200:
+        raise SteamApiError( "Status code: {} -- Content: {}".format( r.status_code, r.content ) )
+
+    try:
+        result = r.json()[ 'game' ]
+
+    except KeyError:
+        raise SteamApiError( "Missing 'game' key." )
+
+    return result

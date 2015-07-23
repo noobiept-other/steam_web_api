@@ -53,13 +53,20 @@
         <h2>Achievements</h2>
 
         {% if stats.achievements %}
-            <ul>
-                {% for achievement in stats.achievements %}
-                    {% if achievement.achieved != 0 %}
-                        <li>{{ achievement.name }}</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+
+            <h2>Achieved</h2>
+
+            <table>
+                <tr>
+                    {% for achievement in stats.achievements %}
+                        <td><img src="{{ achievement.icon }}" /> {{ achievement.displayName }}</td>
+
+                        {% if forloop.counter|divisibleby:5 %}
+                        </tr><tr>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
 
         {% else %}
             <p>No achievements yet.</p>
@@ -159,7 +166,7 @@
             <tbody>
             {% for achievement in global_achievements %}
             <tr>
-                <td data-value="{{ achievement.name.strip }}">{{ achievement.name }}</td>
+                <td data-value="{{ achievement.displayName.strip }}"><img src="{{ achievement.icon }}" /> {{ achievement.displayName }}</td>
                 <td data-value="{{ achievement.percent }}">{{ achievement.percent|floatformat:"2" }}</td>
             </tr>
             {% endfor %}
