@@ -80,5 +80,14 @@ class PrivateMessage( models.Model ):
     def get_url(self):
         return reverse( 'accounts:message_open', args= [ self.id ] )
 
+    def get_date_created_number(self):
+        """
+            Time since the date it was created until the current time.
+            Returns a float, useful for comparisons/sorting/etc.
+        """
+        diff = timezone.now() - self.date_created
+
+        return diff.total_seconds()
+
     class Meta:
         ordering = [ '-date_created' ]

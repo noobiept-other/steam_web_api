@@ -20,7 +20,7 @@
             <tr>
                 <th class="SortTable-sortable">from</th>
                 <th class="SortTable-sortable">title</th>
-                <th class="SortTable-sortable" data-initial-sort="descending">date</th>
+                <th class="SortTable-sortable" data-initial-sort="ascending">date</th>
             </tr>
         </thead>
 
@@ -34,8 +34,8 @@
 
                     {{ message.sender|account_name }}
                 </td>
-                <td data-value="{{ message.title|truncatewords:25 }}">{{ message.title|truncatewords:25 }}</td>
-                <td data-value="{{ message.date_created }}">{{ message.date_created|naturaltime }}</td>
+                <td data-value="{{ message.title.strip|truncatewords:25 }}">{{ message.title|truncatewords:25 }}</td>
+                <td data-value="{{ message.get_date_created_number }}">{{ message.date_created|naturaltime }}</td>
                 <td><a href="{% url 'accounts:message_remove_confirm' message.id %}" title="Remove Message">X</a></td>
             </tr>
         {% endfor %}
