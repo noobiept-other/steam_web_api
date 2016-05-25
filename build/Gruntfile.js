@@ -61,6 +61,9 @@ grunt.initConfig({
                     src: 'style.css',
                     dest: dest + 'static/css/'
                 }]
+            },
+            options: {
+                advanced: false
             }
         }
     });
