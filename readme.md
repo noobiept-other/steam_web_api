@@ -1,7 +1,7 @@
 Try it out here
 ===============
 
-[http://steam-web-api.herokuapp.com/](http://steam-web-api.herokuapp.com/)
+[http://s-web-api.herokuapp.com/](http://s-web-api.herokuapp.com/)
 
 Description
 ===========

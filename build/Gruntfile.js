@@ -1,6 +1,6 @@
 module.exports = function( grunt )
 {
-var dest = '../../steam_website/';
+var dest = '../../steam_web_api_website/';
 
 
 grunt.initConfig({

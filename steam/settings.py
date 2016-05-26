@@ -49,7 +49,7 @@ else:
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-ALLOWED_HOSTS = [ 'steam-web-api.herokuapp.com', 'steam-web-api.heroku.com' ]
+ALLOWED_HOSTS = [ 's-web-api.herokuapp.com' ]
 
 
 INSTALLED_APPS = (
