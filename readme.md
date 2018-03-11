@@ -1,8 +1,3 @@
-Try it out here
-===============
-
-[http://s-web-api.herokuapp.com/](http://s-web-api.herokuapp.com/)
-
 Description
 ===========
 
