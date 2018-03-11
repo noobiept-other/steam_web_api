@@ -1,10 +1,8 @@
-# python 3.4
-
-django == 1.9.6
-pytz == 2016.4
-dj-database-url == 0.4.1
+django == 2.0.3
+pytz == 2018.3
+dj-database-url == 0.5.0
 dj-static == 0.0.6
-gunicorn == 19.6
-psycopg2 == 2.6.1
-requests == 2.10
-python-social-auth == 0.2.19
+gunicorn == 19.7.1
+psycopg2 == 2.7.4
+requests == 2.18.4
+python-social-auth == 0.3.6
