@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 
 import steam.views
+import social_django.urls
 
 
 urlpatterns = [
@@ -15,9 +16,9 @@ urlpatterns = [
     url( r'^game/(?P<appId>\d+)/(?P<whatToShow>\w+)$', steam.views.game, name= 'game_specify' ),
 
 
-    url( '', include( 'social.apps.django_app.urls', namespace= 'social' ) ),
-    url( r'^accounts/', include( 'accounts.urls', namespace= 'accounts', app_name= 'accounts' ) ),
-    url( r'^admin/', include( admin.site.urls ) ),
+    url( '', include( social_django.urls, namespace= 'social' ) ),
+    url( r'^accounts/', include( 'accounts.urls', namespace= 'accounts' ) ),
+    url( r'^admin/', admin.site.urls ),
 ]
 
 

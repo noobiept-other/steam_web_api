@@ -12,7 +12,7 @@
         STEAM_API_KEY -- The key needed to use the steam web api.
 """
 
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 import os.path
 
 
@@ -49,7 +49,8 @@ else:
 
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
-ALLOWED_HOSTS = [ 's-web-api.herokuapp.com' ]
+if not DEBUG:
+    ALLOWED_HOSTS = [ 's-web-api.herokuapp.com' ]
 
 
 INSTALLED_APPS = (
@@ -61,22 +62,21 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'social.apps.django_app.default',
+    'social_django',
 
     'accounts',
     'steam',
 )
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
 )
 
 
@@ -97,8 +97,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'social.apps.django_app.context_processors.backends',
-                'social.apps.django_app.context_processors.login_redirect',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -157,7 +157,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 
 
 AUTHENTICATION_BACKENDS = (
-    'social.backends.steam.SteamOpenId',
+    'social_core.backends.steam.SteamOpenId',
     'django.contrib.auth.backends.ModelBackend',
 )
 

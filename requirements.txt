@@ -5,4 +5,4 @@ dj-static == 0.0.6
 gunicorn == 19.7.1
 psycopg2 == 2.7.4
 requests == 2.18.4
-python-social-auth == 0.3.6
+social-auth-app-django == 2.1.0

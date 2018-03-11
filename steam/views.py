@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.http import urlencode
 from django.conf import settings
@@ -15,7 +15,7 @@ def home( request, whatToShow= None ):
     context = {}
     user = request.user
 
-    if user.is_authenticated():
+    if user.is_authenticated:
 
         if whatToShow == 'owned':
             apps = user.get_games_owned()

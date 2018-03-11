@@ -50,8 +50,8 @@ class Migration(migrations.Migration):
                 ('content', models.TextField(max_length=500)),
                 ('date_created', models.DateTimeField(default=django.utils.timezone.now, help_text='Date Created')),
                 ('has_been_read', models.BooleanField(default=False)),
-                ('receiver', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('sender', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='sender')),
+                ('receiver', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('sender', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='sender', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-date_created'],
