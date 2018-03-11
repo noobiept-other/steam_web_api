@@ -80,7 +80,7 @@ def game( request, appId, whatToShow= None ):
     try:
         if whatToShow == 'stats':
 
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
 
                 steamId = request.user.username
                 context[ 'show_stats' ] = True
